@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/default">
+<head>
+<title>retrieve</title>
+
+
+<script src=""></script>
+<script>
+
+
+var ticketId;
+
+function select_list(data) {
+	this.select_nodes = [];
+	this.value = data;
+	this.pos = 0;
+	this.listSize = 0;
+}
+
+select_list.prototype.toOptionString=function() {
+	var returnHTML = "<option value='0'>전체</option>\n";
+	for(var i = 0 ; i < this.listSize ; i++ ) {
+		returnHTML = returnHTML + "<option value='"+(i+1)+"'>"+this.select_nodes[i].value+"</option>\n"
+		
+	}
+	return returnHTML;
+}
+
+select_list.prototype.add=function(data1, data2, data3) {
+	var i = 0;
+	for(i = 0 ; i < this.listSize ; i++ ) {
+		if(this.select_nodes[i].value == data1) {
+			this.select_nodes[i].add2(data2, data3);
+			break;
+		} 
+	}
+
+	if(i == this.listSize) {
+		this.select_nodes[this.listSize] = new select_list(data1);
+		this.select_nodes[this.listSize++].add2(data2, data3);
+	}
+}
+
+select_list.prototype.add2=function(data1, data2) {
+	var i = 0;
+	for(i = 0 ; i < this.listSize ; i++ ) {
+		if(this.select_nodes[i].value == data1) {
+			this.select_nodes[i].add3(data2);
+			break;
+		}
+	}
+	
+	if(i == this.listSize) {
+		this.select_nodes[this.listSize] = new select_list(data1);
+		this.select_nodes[this.listSize++].add3(data2);
+	}
+}
+
+select_list.prototype.add3=function(data) {
+	this.select_nodes[this.listSize] = new select_list(data);
+	this.listSize++;
+}
+
+</script>
+
+<script th:inline="javascript">
+
+
+function equipment_popup(el){
+    var $el = $('#popup_bg'); //$(el);        	//레이어의 id를 $el 변수에 저장
+    var isDim = $el.prev().hasClass('dimBg');   //dimmed 레이어를 감지하기 위한 boolean 변수
+
+    $('#popup_area').html(makeEquipmentPopup(el));
+    
+    $('#equipmentSelectArea').load("/ticket/equipmentSelect");
+    
+    
+    isDim ? $('.dim-layer').fadeIn() : $el.fadeIn();
+
+    var $elWidth = ~~($el.outerWidth()),
+        $elHeight = ~~($el.outerHeight()),
+        docWidth = $(document).width(),
+        docHeight = $(document).height();
+
+    // 화면의 중앙에 레이어를 띄운다.
+    if ($elHeight < docHeight || $elWidth < docWidth) {
+        $el.css({
+            marginTop: -$elHeight /2,
+            marginLeft: -$elWidth/2
+        })
+    } else {
+        $el.css({top: 0, left: 0});
+    }
+
+    $el.find('a.btn-layerClose').click(function(){
+        isDim ? $('.dim-layer').fadeOut() : $el.fadeOut(); // 닫기 버튼을 클릭하면 레이어가 닫힌다.
+        $('#popup_area').html("");
+        return false;
+    });
+
+    $('.layer .dimBg').click(function(){
+        $('.dim-layer').fadeOut();
+        return false;
+    });
+
+}
+
+function makeEquipmentPopup(el) {
+
+	returnHTML = "";
+	
+	returnHTML = returnHTML + "<div id='equipmentSelectArea' align='center' style='margin:30px;'></div>";
+	
+	return returnHTML;
+}
+
+
+
+
+
+
+
+function readyAction() {
+	$("#reqTicketListArea").load("/ticket/reqTicketList");
+	$("#recvTicketListArea").load("/ticket/recvTicketList");
+	
+}
+
+function searchTicket() {
+	$("#ticketListArea").load("/ticket/ticketList");//json으로 검색 항목들 넣어줘야함	
+}
+
+function issueQuick() {
+	if($("#equipmentID").val() == 0) {
+		alert('장비군이 선택되지 않았습니다.');
+		return;
+	}
+	if($("#ticketContent").val().length < 30) {
+		alert('요청 내용이 너무 짧습니다.(30자 이상)\n현재길이 : '+$("#ticketContent").val().length);
+		return;
+	}
+	//삽입진행(장비군ID, 내용)	
+	
+	
+	$.ajax({ 
+		type: "GET", 
+		url : "/ticket/quickIssuing", 
+		data: {"equipment_id":$("#equipmentID").val(), "content":$("#ticketContent").val()},//, "mailContent":$("#recvTicketListArea").html()}, 
+		async: true, 
+		success : 
+			function(data, status, xhr) { 
+				location.reload();
+ 			}, 
+		error: function(jqXHR, textStatus, errorThrown) { 
+			alert(jqXHR.responseText); 
+		} 
+	});
+	
+	
+	location.reload();
+};
+
+
+</script>
+
+</head>
+<!-- Content Wrapper. Contains page content -->
+
+<!-- /* test */ -->
+
+
+<body onload="javascript:ready()">
+<th:block layout:fragment="content">
+
+    <!-- /.content-header -->
+    <textarea id="userNameField" style="display:none" th:text="${curUserName}"></textarea>
+ 
+	<section style="display:flex; justify-content:center;" class="content-header">
+		<h1>
+		내 요청 페이지
+		</h1>
+		<br>
+	</section>
+	
+	<hr>
+	<div style="margin:20px;padding:10px;background-color: #FFFFFF;border-radius:10px;">
+	<h3 style="margin-left:30px;">빠른 요청</h3>
+	<div style="margin:20px;padding:20px;border-style:solid;">
+		<form>
+		<table style="width:100%;">
+		<tr><td colspan="5" style="width:100%;"></td></tr>
+			<tr>
+		
+				<td style="width:10%;height:40px;">
+					<input type="button" value="장비군선택" onclick="equipment_popup(this);"/> 
+					<input id="equipmentID" type="hidden" value="0"/>
+				</td>
+				<td id="equipLabelTD" style="width:15%;">
+					선택장비군 없음
+				</td>
+				<td style="width:40%;">
+					
+				</td>
+				<td style="width:20%;text-align:right;">
+					<input type="checkbox" checked/> 메일&nbsp;
+					<input type="button" value="파일첨부"/>
+		
+				</td>
+				<td style="text-align:center;width:15%;">
+					첨부파일 없음
+				</td>
+			</tr>
+			<tr>
+				<td style="width:10%;text-align:center;">요청내용</td>
+				<td colspan="4" style="border-style:solidpadding:10px;;">
+					<textarea id="ticketContent" style="width:100%;height:70px;scrolling:auto;"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="6" style="height:50px;text-align:center;">
+					<input type="button" value="요청진행" onclick="issueQuick();"/>		
+				</td>
+			</tr>	
+		</table>
+	
+		</form>
+	</div>
+</div>
+
+
+	<hr>
+	<div style="background-color:#FFFFFF;margin:20px;padding:10px;">
+		<h3 style="margin-left:30px;">내 요청 항목</h3>
+		<section id="reqTicketListArea">
+		</section>
+	</div>
+
+		<hr>
+	<div style="background-color:#FFFFFF;margin:20px;padding:10px;">
+		<h3 style="margin-left:30px;">내 접수 항목</h3>
+		<section id="recvTicketListArea">
+		</section>
+	</div>
+		<hr>
+ 
+</th:block>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<script>
+
+function selectUserChange(el) {
+	$("#recvUserId").val($("#user option:selected").val());
+	alert($("#user option:selected").val());
+	$("#recvUser").val($("#user option:selected").html());
+}
+
+</script>
+
+
+		<div style="margin-left:30px;margin-bottom:10px;font-size:25px;"><div id="ticketDetailSpinner" class="fa fa-spinner fa-spin" style="display:none;"></div><i id="ticketDetailIcon" class="fa fa-plane"></i> 장비군 선택</div>
+
+        <div class="box box-primary">
+            <div class="box-header with-border" style="display:none">
+              <h3 class="box-title">요청 내역</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+
+            <form id="equipmentSelectForm" class="form-horizontal">
+              <div class="box-body">
+<!------------------------------------------------------------------------------>
+
+                <!-- select -->
+                <div class="form-group">
+                  <label class="col-sm-12">대상 선택</label>
+
+                </div>
+                                <!-- select -->
+                <div class="form-group">
+                  <div class="col-sm-12">
+                  <select id="user" class="form-control" onchange="selectUserChange(this)">
+                    <option th:each="user : ${userList}" th:value="${user.id}" th:name="${user.emp_num}" th:text="${user.name+'('+user.email+')'}"></option>
+                  </select>
+                  </div>
+                </div>
+<!--                                 -->
+              </div>   
+
+
+            </form>
+          </div>
+</html>

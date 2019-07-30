@@ -1,0 +1,146 @@
+/* hover을 포함한 button, 페이지 우측 상단 Icon,font-family, radio, login form 등을 포함한 파일입니다.*/
+/* [0] */
+
+.default-button {
+   -webkit-transition-duration: 0.4s; /* Safari */
+   transition-duration: 0.4s;
+   border-radius: 8px 0 8px 0;
+   background-color: #444888; /* Green */
+   color: white;
+   border: 2px solid #444888;
+ }
+
+.button_2 {
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  border-radius: 8px 0 8px 0;
+  background-color: #cd5542; /* Green */
+  color: white;
+  font-size: 14px;
+  font-weight: 800;
+  border: 2px solid white;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+
+}
+
+.button_2:hover{
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  border-radius: 8px 0 8px 0;
+  background-color: white; /* Green */
+  color: #cd5542;
+  font-size: 14px;
+  font-weight: 800;
+  border: 2px solid #cd5542;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+.default-button:hover {
+  background-color: white; /* Green */
+  color: #444888;
+  border: 2px solid #444888; 
+}
+
+
+.userIcon, .alarmIcon, .logonIcon {
+	color: ORANGE;
+}
+
+.userIcon a:hover {
+	color: RED;
+}
+
+.alarmIcon a:hover {
+	color: RED;
+}
+
+.logonIcon a:hover {
+	color: RED;
+}
+
+
+@font-face {
+  font-family: 'Nanum Gothic';
+  font-style: normal;
+  font-weight: 400;
+  src: local('NanumGothic'), url(/fonts/NanumGothic-Regular.ttf);
+}
+/* [1] */
+@font-face {
+  font-family: 'Nanum Gothic';
+  font-style: normal;
+  font-weight: 700;
+  src: local('NanumGothic Bold'), local('NanumGothic-Bold'), url('/fonts/NanumGothic-Bold.ttf');
+}
+/* [2] */
+@font-face {
+  font-family: 'Nanum Gothic';
+  font-style: normal;
+  font-weight: 800;
+  src: local('NanumGothic ExtraBold'), local('NanumGothic-ExtraBold'), url('/fonts/NanumGothic-ExtraBold.ttf');
+}
+
+* {
+  font-family: 'Nanum Gothic', sans-serif;
+}
+
+body#LoginForm{ background-image:url("https://hdwallsource.com/img/2014/9/blur-26347-27038-hd-wallpapers.jpg"); background-repeat:no-repeat; background-position:center; background-size:cover; padding:10px;}
+
+.form-heading { color:#fff; font-size:23px;}
+.panel h2{ color:#444444; font-size:18px; margin:0 0 8px 0;}
+.panel p { color:#777777; font-size:14px; margin-bottom:30px; line-height:24px;}
+.login-form .form-control {
+  background: #f7f7f7 none repeat scroll 0 0;
+  border: 1px solid #d4d4d4;
+  border-radius: 4px;
+  font-size: 14px;
+  height: 50px;
+  line-height: 50px;
+}
+.main-div {
+  background: #ffffff none repeat scroll 0 0;
+  border-radius: 2px;
+  margin: 10px auto 30px;
+  max-width: 38%;
+  padding: 50px 70px 70px 71px;
+}
+
+.login-form .form-group {
+  margin-bottom:10px;
+}
+.login-form{ text-align:center;}
+.forgot a {
+  color: #777777;
+  font-size: 14px;
+  text-decoration: underline;
+}
+.login-form  .btn.btn-primary {
+  background: #f0ad4e none repeat scroll 0 0;
+  border-color: #f0ad4e;
+  color: #ffffff;
+  font-size: 14px;
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  padding: 0;
+}
+.forgot {
+  text-align: left; margin-bottom:30px;
+}
+.botto-text {
+  color: #ffffff;
+  font-size: 14px;
+  margin: auto;
+}
+.login-form .btn.btn-primary.reset {
+  background: #ff9900 none repeat scroll 0 0;
+}
+.back { text-align: left; margin-top:10px;}
+.back a {color: #444444; font-size: 13px;text-decoration: none;}
+
+
+
+.radiobuttontext {
+  font-size: 12px;
+  font-weight: 300;
+}

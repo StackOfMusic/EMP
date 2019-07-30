@@ -1,0 +1,169 @@
+<style>
+.bordertable {
+	border-collapse: collapse;
+	border: 2px solid;
+	text-align: center;
+	width: 760px;
+	margin-bottom: 20px;
+}
+
+.bordertable td {
+	border: 1px solid;
+	min-height: 40px;
+	min-width: 70px;
+}
+
+.gray {
+	width: 100px;
+	background-color: #999999;
+}
+</style>
+<div style="border-style: solid; width: 768px; height: 1024px;">
+	<table>
+		<tr>
+			<td style="padding: 30px; width: 768px; text-align: center;"><h1>기술지원
+					요청서</h1></td>
+		</tr>
+		<tr>
+			<td><h3>ㅁ작성일 :</h3></td>
+		</tr>
+		<tr>
+			<td><h3>ㅁ기술지원 접수내역</h3></td>
+		</tr>
+		<tr>
+			<td>
+				<table class="bordertable">
+					<tr>
+						<td class="gray">지역</td>
+						<td id="formUserLocation"></td>
+						<td class="gray">국소</td>
+						<td id="formSystemLocation"></td>
+
+					</tr>
+					<tr>
+						<td class="gray">장비명</td>
+						<td id="formSystemName"></td>
+						<td class="gray">제조사</td>
+						<td id="formSystemVendor"></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr></tr>
+		<tr>
+			<td><h3>ㅁ기술지원 현황</h3></td>
+		</tr>
+		<tr>
+			<td>
+
+				<table class="bordertable">
+					<tr>
+						<td class="gray">지원 구분</td>
+						<td id="formTicketRemote"></td>
+						<td class="gray">지원 작업자</td>
+						<td id="recvUserName"></td>
+					</tr>
+					<tr>
+						<td class="gray">작업 종류</td>
+						<td id="formTicketType"></td>
+						<td class="gray">기술지원 <br />업체
+						</td>
+						<td id="recvUserTeam"></td>
+					</tr>
+					<tr>
+						<td class="gray">지원 내역<br />(요약)
+						</td>
+						<td id="formTicketDetail"></td>
+						<td class="gray">지원 일자</td>
+						<td id="formReqTime"></td>
+					</tr>
+					<tr>
+						<td class="gray">지원 요청자</td>
+						<td id="reqUserName"></td>
+						<td class="gray">지원 확인자</td>
+						<td id="workUserName"></td>
+					</tr>
+					<tr>
+						<td class="gray">불량 내역<br />/요청 내역
+						</td>
+						<td id="formTicketDetail" colspan="3"></td>
+					</tr>
+					<tr>
+						<td class="gray">조치 내역/<br />지원 내역<br />(상세)
+						</td>
+						<td id="formTicketContent" colspan="3"></td>
+					</tr>
+					<tr>
+						<td class="gray">특이 사항<br />/비고
+						</td>
+						<td id="formTicketETC" colspan="3"></td>
+					</tr>
+
+				</table>
+
+			</td>
+
+		</tr>
+		<tr></tr>
+		<tr>
+			<td><h3>ㅁ기술지원 정산금액</h3></td>
+		</tr>
+		<tr>
+			<td>
+				<table class="bordertable">
+					<tr>
+						<td rowspan="5" class="gray" style="width: 30px;">Offline<br />지원
+						</td>
+						<td colspan="2" class="gray" style="width: 50px;">본부</td>
+						<td></td>
+						<td colspan="2" class="gray" style="width: 70px;">출동 국소</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td colspan="2" class="gray">출동 인원</td>
+						<td></td>
+						<td rowspan="2" class="gray" style="width: 70px;">차량 이용시<br />(편도기준)
+						</td>
+						<td class="gray" style="width: 40px;">통행료</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td rowspan="2" class="gray" style="width: 40px;">지원시간<br />(시간단위)
+						</td>
+						<td class="gray" style="width: 40px;">주간</td>
+						<td></td>
+						<td class="gray">주행 거리</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="gray" style="width: 40px;">야간</td>
+						<td></td>
+						<td rowspan="2" class="gray">도서 출입시<br />(편도기준)
+						</td>
+						<td rowspan="2" class="gray">배 운임</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td colspan="2" class="gray">숙박 인원</td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td colspan="3" class="gray">Online 지원건수(주/야)</td>
+						<td colspan="4"></td>
+					</tr>
+					<tr>
+						<td colspan="3" class="gray">전체 금액</td>
+						<td colspan="4"></td>
+					</tr>
+				</table>
+			</td>
+
+		</tr>
+		<tr>
+			<td style="text-align: right;"><h2>요청자 (인)</h2></td>
+
+		</tr>
+
+	</table>
+</div>

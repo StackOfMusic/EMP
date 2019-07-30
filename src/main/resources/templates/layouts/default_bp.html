@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <title layout:title-pattern="$LAYOUT_TITLE : $CONTENT_TITLE">T-Partner</title>
+  <th:block th:replace="~{fragments/head}"></th:block>
+  
+</head>
+<body class="hold-transition sidebar-mini skin-blue" style="overflow:hidden">
+  <th:block th:replace="~{fragments/nav-left_ㅠㅔ}"></th:block>
+  
+  <div class="content-wrapper" style="overflow:auto; height:100px" >
+	    <th:block th:replace="~{fragments/header}"></th:block>
+    	<th:block layout:fragment="content"></th:block>
+  </div>
+  <div class="container">
+
+  <th:block th:replace="~{fragments/footer}"></th:block>
+    <th:block th:replace="~{fragments/common-script}"></th:block>
+  </div>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+    <!--/*@thymesVar id="data" type="Map<Integer, List<MyCell>>"*/-->
+    <!--/*@thymesVar id="dataItem" type="List<MyCell>"*/-->
+    <!--/*@thymesVar id="cell" type="com.skt.bpms.MyCell"*/-->
+	<th:block th:if="${data != null}">
+	<table class="excelDefaults">
+	<tr th:if="${columnWidths != null}">
+		<th th:each="columnWidth : ${columnWidths}" th:width="${columnWidth}">
+		</th>
+	</tr>
+	<tr th:each="dataItem : ${data}">
+		<th:block th:each="list: ${dataItem.value}">
+			<th:block th:each="cell : ${list}">
+				<th:block th:if="${cell.colspan == 0 && cell.rowspan == 0}">
+	        		<td  th:style="@{${cell.htmlStyle}}" th:text="${cell.content}" ondrop="dropin(this);" ondragover="dragin(this);" ondragexit="dragout(this);">
+					</td>
+				</th:block>
+				<th:block th:if="${cell.colspan > 0 && cell.rowspan == 0}">
+	        		<td  th:colspan="${cell.colspan}" th:style="@{${cell.htmlStyle}}" th:text="${cell.content}" ondrop="dropin(this);" ondragover="dragin(this);" ondragexit="dragout(this);">
+					</td>
+				</th:block>
+				<th:block th:if="${cell.colspan == 0 && cell.rowspan > 0}">
+	        		<td  th:rowspan="${cell.rowspan}" th:style="@{${cell.htmlStyle}}" th:text="${cell.content}" ondrop="dropin(this);" ondragover="dragin(this);" ondragexit="dragout(this);">
+					</td>
+				</th:block>
+				<th:block th:if="${cell.colspan > 0 && cell.rowspan > 0}">
+	        		<td  th:colspan="${cell.colspan}" th:rowspan="${cell.rowspan}" th:style="@{${cell.htmlStyle}}" th:text="${cell.content}" ondrop="dropin(this);" ondragover="dragin(this);" ondragexit="dragout(this);">
+					</td>
+				</th:block>
+			</th:block>			
+		</th:block>
+	</tr>
+	</table>	
+	</th:block>
+<script>
+document.addEventListener("drag", function(event) {
+	target = event.target;
+}, false);
+
+document.addEventListener("dragstart", function(event) {
+  // store a ref. on the dragged elem
+  dragged = event.target;
+  // make it half transparent
+  event.target.style.opacity = .5;
+}, false);
+
+document.addEventListener("dragend", function(event) {
+  // reset the transparency
+  event.target.style.opacity = "";
+}, false);
+
+/* events fired on the drop targets */
+document.addEventListener("dragover", function(event) {
+	
+  // prevent default to allow drop
+  event.preventDefault();
+}, false);
+
+document.addEventListener("dragenter", function(event) {
+  // highlight potential drop target when the draggable element enters it
+  if (event.target.className == "dropzone") {
+    event.target.style.background = "purple";
+  }
+
+}, false);
+
+document.addEventListener("dragleave", function(event) {
+  // reset background of potential drop target when the draggable element leaves it
+  if (event.target.className == "dropzone") {
+    event.target.style.background = "";
+  }
+
+}, false);
+
+document.addEventListener("drop", function(event) {
+	
+  // prevent default action (open as link for some elements)
+  event.preventDefault();
+  // move dragged elem to the selected drop target
+  if (event.target.className == "dropzone") {
+    event.target.style.background = "";
+    dragged.parentNode.removeChild( dragged );
+    event.target.appendChild( dragged );
+  }
+}, false);
+</script>

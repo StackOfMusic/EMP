@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="/js/tui-grid/tui-grid.min.js"></script>
+<script src="/js/tui-grid/tui-gridDraw.js"></script>
+<script type="text/javascript">
+var columns = [{
+    header: '장비',
+    name: 'str'
+  },
+  {
+   	 header: '요청 수',
+   	 name: 'num'
+  }
+];
+var grid = drawGrid("/equipTicketChartData", "equipTicketGrid", columns);
+</script>
+</head>
+<body>
+<div id="equipTicketGrid"></div>
+</body>
+</html>

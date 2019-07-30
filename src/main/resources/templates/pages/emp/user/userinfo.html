@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/default">
+<head>
+<title>내 정보</title>
+
+
+<script>
+var ticketId;
+
+function select_list(data) {
+	this.select_nodes = [];
+	this.value = data;
+	this.pos = 0;
+	this.listSize = 0;
+}
+
+select_list.prototype.toOptionString=function() {
+	var returnHTML = "<option value='0'>전체</option>\n";
+	for(var i = 0 ; i < this.listSize ; i++ ) {
+		returnHTML = returnHTML + "<option value='"+(i+1)+"'>"+this.select_nodes[i].value+"</option>\n"
+		
+	}
+	return returnHTML;
+}
+
+select_list.prototype.add=function(data1, data2, data3) {
+	var i = 0;
+	for(i = 0 ; i < this.listSize ; i++ ) {
+		if(this.select_nodes[i].value == data1) {
+			this.select_nodes[i].add2(data2, data3);
+			break;
+		} 
+	}
+
+	if(i == this.listSize) {
+		this.select_nodes[this.listSize] = new select_list(data1);
+		this.select_nodes[this.listSize++].add2(data2, data3);
+	}
+}
+
+select_list.prototype.add2=function(data1, data2) {
+	var i = 0;
+	for(i = 0 ; i < this.listSize ; i++ ) {
+		if(this.select_nodes[i].value == data1) {
+			this.select_nodes[i].add3(data2);
+			break;
+		}
+	}
+	
+	if(i == this.listSize) {
+		this.select_nodes[this.listSize] = new select_list(data1);
+		this.select_nodes[this.listSize++].add3(data2);
+	}
+}
+
+select_list.prototype.add3=function(data) {
+	this.select_nodes[this.listSize] = new select_list(data);
+	this.listSize++;
+}
+
+</script>
+
+<script th:inline="javascript">
+var select_team = new select_list("team");
+var select_equip = new select_list("equip");
+
+
+/*<![CDATA[*/
+
+    /*[# th:each="equip : ${equipmentList}"]*/
+	  //  select_equip.add(/*[[${equip?.category1}]]*/, /*[[${equip?.category2}]]*/, /*[[${equip?.category3}]]*/);
+    /*[/]*/
+
+/*]]>*/
+
+/*<![CDATA[*/
+
+    /*[# th:each="team : ${teamList}"]*/
+	//   select_team.add(/*[[${team?.type}]]*/, /*[[${team?.category1}]]*/, /*[[${team?.category2}]]*/);
+    /*[/]*/
+
+/*]]>*/
+
+
+
+
+function clean_select(element) {
+	element.html("<option value='0'>전체</option>");
+}
+
+function selectChange(element) {
+	var team1 = $("#team1 option:selected").val();
+	var team2 = $("#team2 option:selected").val();
+	var team3 = $("#team3 option:selected").val();
+	var equip1 = $("#equip1 option:selected").val();
+	var equip2 = $("#equip2 option:selected").val();
+	var equip3 = $("#equip3 option:selected").val();
+	
+	
+	if(element.options[element.selectedIndex].value == 0) {
+
+		switch(element.id) {
+		case "team1":
+			clean_select($("#team2"));
+			clean_select($("#team3"));
+			break;
+		case "team2":
+			clean_select($("#team3"));
+			break;
+		case "equip1":
+			clean_select($("#equip2"));
+			clean_select($("#equip3"));
+			break;
+		case "equip2":
+			clean_select($("#equip3"));
+			break;
+		}
+
+	} else {
+		switch(element.id) {
+		case "team1":
+			$("#team2").html(select_team.select_nodes[team1-1].toOptionString());
+			clean_select($("#team3"));
+			break;
+		case "team2":
+			$("#team3").html(select_team.select_nodes[team1-1].select_nodes[team2-1].toOptionString());
+			break;
+		case "equip1":
+			$("#equip2").html(select_equip.select_nodes[equip1-1].toOptionString());
+			clean_select($("#equip3"));
+			break;
+		case "equip2":
+			$("#equip3").html(select_equip.select_nodes[equip1-1].select_nodes[equip2-1].toOptionString());
+			break;
+		}
+	}
+}
+
+function readyAction() {
+	$("#team1").html(select_team.toOptionString());
+	$("#equip1").html(select_equip.toOptionString());
+	$("#ticketListArea").load("/ticket/ticketList");
+	$("#ticketListSpinner").hide();
+	$("#ticketListIcon").show();
+}
+
+function searchTicket() {
+	$("#ticketListArea").html("");
+	$("#ticketListIcon").hide();
+	$("#ticketListSpinner").show();
+	$("#ticketListArea").load("/ticket/ticketList");//json으로 검색 항목들 넣어줘야함	
+	$("#ticketListSpinner").hide();
+	$("#ticketListIcon").show();
+}
+
+function excelDown() {
+	location.href="/excelDown.do";
+}
+
+
+</script>
+
+</head>
+<!-- Content Wrapper. Contains page content -->
+
+<!-- /* test */ -->
+
+<body onload="javascript:ready()">
+<th:block layout:fragment="content">
+    <!-- /.content-header -->
+	<section style="display:flex; justify-content:left; font-weight: bolder" class="content-header">
+	<H1>지원요청서 양식 고리 페이지</H1>
+	</section>
+
+
+
+	<div style="margin:20px;padding:10px;background-color: #FFFFFF;border-radius:1px">
+		<div class="main-container" style="text-align:center; vertical-align:middle;" >
+			<table class="tg" style="width: 100%; border-radius: 10px; text-align:center;">
+				<tr>
+					<td class="tg-et0u" rowspan="8" style="width:8%;font-family: 'Nanum Gothic', sans-serif;font-weight: 900;color: #f8f7f6">필터</td>
+					<td class="tg-o6n7" rowspan="2" style="text-align:center; font-family: 'Nanum Gothic', sans-serif; border-bottom:2px #242D31; font-weight: 800; width:8%; color:#f8f7f6">팀<br>
+						<div class="radiobuttontext">
+							<input type="checkbox" name="chk_info" value="requestTeam" checked="checked">요청팀
+							<input type="checkbox" name="chk_info" value="receiptTeam">접수팀
+<!--TODO: value에 나중에 DB변수명대로 바꾸기-->
+						</div>
+					</td>
+					<td class="tg-gjj2" >구분</td>
+					<td class="tg-gjj2">본부</td>
+					<td class="tg-gjj2">팀</td>
+					<td class="tg-o6n7" rowspan="8" style="width: 10%">
+						<button class="button_2" style="line-height:25px; text-align:center; padding:1px;margin-left:5px; box-sizing:content-box;margin-top:5px;width:60px;height:35px;" onclick="searchTicket();">조회</button>
+					</td>
+				</tr>
+				<tr>
+<!--팀구분-SKT,BP드롭다운-->
+					<td class="tg-px66">
+						<form style="width:40px; margin-left: 50px">
+							<select id="team1" style="width:140px;" onchange="selectChange(this)">
+								<option value="0">전체</option>
+							</select>
+<!--							<input style="margin-left:10px; display: inline;" type="checkbox"/> 요청팀-->
+<!--							<input style="display: inline;" type="checkbox"/> 접수팀&nbsp;-->
+						</form>
+					</td>
+<!--skt본부고르는드롭다운-->
+					<td class="tg-px66">
+						<form style="width:40px;margin-left: 50px">
+							<select style="width:140px;" id="team2" onchange="selectChange(this)">
+								<option value="0">전체</option>
+							</select>
+						</form>
+					</td>
+<!--IP전송cell,전송운용1팀 등 팀/셀 고르는 드롭다운-->
+					<td class="tg-px66">
+						<form>
+							<select style="width:140px;" id="team3" onchange="selectChange(this)">
+								<option value="0">전체</option>
+							</select>
+						</form>
+					</td>
+				</tr>
+				<tr>
+					<td class="tg-o6n7" rowspan="2" style="font-family: 'Nanum Gothic', sans-serif; text-align:center; width:8%; border-bottom:1px #242D31; font-weight: 800; color:#f8f7f6">장비군</td>
+					<td class="tg-gjj2">대분류</td>
+					<td class="tg-gjj2">중분류</td>
+					<td class="tg-gjj2">소분류</td>
+				</tr>
+				<tr>
+<!--장비군대분류 드롭다운-->
+					<td class="tg-px66">
+						<form>
+							<select style="width:140px;" id="equip1" onchange="selectChange(this)">
+								<option value="0">전체</option>
+							</select>
+						</form>
+					</td>
+<!--장비군중분류 드롭다운-->
+					<td class="tg-px66">
+						<form>
+							<select style="width:140px;" id="equip2" onchange="selectChange(this)">
+								<option value="0">전체</option>
+							</select>
+						</form>
+					</td>
+<!--장비군소분류 드롭다운-->
+					<td class="tg-px66">
+						<form>
+							<select style="width:140px;" id="equip2" onchange="selectChange(this)">
+								<option value="0">전체</option>
+							</select>
+						</form>
+					</td>
+				</tr>
+				<tr>
+					<td class="tg-o6n7" rowspan="4" style="font-family:'Nanum Gothic',sans-serif; width:8%; text-align:center;border-bottom:1px #242D31; font-weight: 800; color:#f8f7f6">세부</td>
+					<td class="tg-gjj2">진행상태</td>
+					<td class="tg-gjj2" colspan="2">기간</td>
+				</tr>
+				<tr>
+					<td class="tg-px66">
+						<input type="checkbox" name="chk_info4" value="ticketRegistered" checked="checked">등록
+						<input type="checkbox" name="chk_info4" value="ticketOngoing">진행
+						<input type="checkbox" name="chk_info4" value="ticketDone">완료
+					</td>
+					<td class="tg-px66">
+						<input type="date" value="시작일자">~</td>
+					<td class="tg-px66">
+						<input type="date" value="종료일자">
+					</td>
+				</tr>
+				<tr>
+					<td class="tg-gjj2">키워드 검색</td>
+					<td class="tg-gjj2" colspan="2" style="width: 350px">
+						<input type="text" width="350px" value="검색어를 입력하세요.">
+					</td>
+				</tr>
+<!--TODO: value에 나중에 DB변수명대로 바꾸기-->
+				<tr>
+					<td class="tg-px66">
+						<input type="radio" name="chk_info2" value="requestName" checked="checked">제목
+						<input type="radio" name="chk_info2" value="requestPerson">작성자
+					</td>
+					<td class="tg-px66" colspan="2">
+						<input type="radio" name="chk_info3" value="viewAll">모두보기
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+
+<!--검색한 결과를 보여주는 밑의 테이블-->
+
+	<div style="background-color:#FFFFFF;margin:20px;padding:10px;">
+		<div style="margin-left:30px;font-size:25px;"><div id="ticketListSpinner" class="fa fa-spinner fa-spin"></div><i id="ticketListIcon" style="display:none;" class="fa fa-list-alt"></i> 요청 목록		<input id="ticketCreate" class="default-button" style="height:25px;margin-top:5px;margin-right:50px;float:right;font-size:13px;" type="button" value="엑셀다운" onclick="excelDown();"/></div>
+
+		<section id="ticketListArea">
+		</section>
+	</div>
+    
+    <section class="content">
+        <div th:text="${user.id}"></div>
+        <div th:text="${user.name}"></div>
+        <div th:text="${user.team}"></div>
+        <div th:text="${user.mobilephone}"></div>
+    </section>
+
+
+</th:block>
+
+</body>
+</html>

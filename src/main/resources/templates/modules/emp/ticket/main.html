@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layouts/default">
+<head>
+<title>로그인</title>
+</head>
+<!-- Content Wrapper. Contains page content -->
+<body onload="ready();">
+	<th:block layout:fragment="content">
+		<!-- /.content-header -->
+		<section style="display: flex; justify-content: center;"
+			class="content-header">
+			<h1>
+				Admin Login <small>Please enter your email and password </small> <br>
+				<br>
+			</h1>
+		</section>
+		<section style="text-align: center;" class="content">
+			<form id="Login">
+				<div class="form-group">
+					<input type="email" class="form-control"
+						style="margin: 0 auto; width: 20%;" id="inputEmail"
+						placeholder="Email Address">
+				</div>
+				<div class="form-group">
+					<input type="password" class="form-control"
+						style="margin: 0 auto; width: 20%;" id="inputPassword"
+						placeholder="Password">
+				</div>
+				<div style="text-align: center;" class="forgot">
+					<a href="reset.html">Forgot password?</a>
+				</div>
+				<button type="submit" class="btn btn-primary">Login</button>
+			</form>
+		</section>
+	</th:block>
+	<!-- /.content-wrapper -->
+	<!-- content-js -->
+	<th:block layout:fragment="content-script">
+
+	</th:block>
+	<!-- /content-js -->
+</body>
+</html>

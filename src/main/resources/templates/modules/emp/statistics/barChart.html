@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+<script src="/js/chart/apexcharts.min.js"></script>
+<script src="/js/chart/apexchartsDraw.js"></script>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+var chart = drawBarChart(/*[[${url}]]*/,/*[[${title}]]*/, /*[[${location}]]*/, /*[[${series_names}]]*/);
+chartObjs = chart; 
+chartType = "bar";
+/*]]>*/
+</script>
+</head>
+<body>
+</body>
+</html>	

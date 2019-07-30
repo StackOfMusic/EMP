@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/default">
+<head>
+<title>지원요청서 양식 등록</title>
+<style>
+#div1 {
+  width: 350px;
+  height: 70px;
+  padding: 10px;
+  border: 1px solid #aaaaaa;
+}
+</style>
+<script>
+
+var date = new Date();
+$(document).ready(function() {
+	$("#headerTitleText").text("지원요청서 양식 등록");
+	$("#start_date").val(date.getFullYear()+"-"+(("0"+(date.getMonth() + 1)).slice(-2))+"-"+date.getDate());
+	$("#end_date").val(date.getFullYear()+"-"+(("0"+(date.getMonth() + 1)).slice(-2))+"-"+date.getDate());
+});
+
+function readyAction() {
+
+}
+
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+var target;
+function drag(ev) {
+	//ev.dataTransfer.setData("text",ev.target.id);
+	target = ev.target;
+}
+function drop(ev) {
+
+  ev.preventDefault();
+  var data = ev.dataTransfer.getData("text");
+  ev.target.appendChild(document.getElementById(data));
+}
+
+function dragin(ev) {
+	$(ev).addClass(".hovered");
+}
+
+function dragout(ev) {
+	$(ev).removeClass(".hovered");
+}
+
+function dropin(ev) {
+	$(ev).html("");
+	$(ev).append($(target).clone());
+}
+
+function loadExcelForm() {
+	var param = new FormData(document.getElementById('excelLoad'));
+
+	//$("#excelLoadArea").load("/readPOI", param);
+	$.ajax({
+			    url : "/readPOI",
+			    type : 'POST',
+			    data : param,
+			    processData : false,
+			    contentType : false,
+				success: function (data) { 
+					$("#excelLoadArea").html(data);
+				},
+				error: function (jqXHR) { 
+					alert(jqXHR.responseText); 
+					}
+	}); 
+}
+</script>
+
+</head>
+<!-- Content Wrapper. Contains page content -->
+
+<!-- /* test */ -->
+
+
+<body>
+<th:block layout:fragment="content">
+    <!-- /.content-header -->
+	<div>
+	
+    <form id="excelLoad" method="post" enctype="multipart/form-data" action="/readPOI"> 
+	    <input type="file" name="file" accept=".xls,.xlsx" /> 
+	    <input type="button" value="Display file content" onclick="loadExcelForm();"/> 
+    </form> 
+    </div>
+    <div>
+		<div id="excelLoadArea" style="border:1px solid;width:1000px;height:600px;display:inline-block;overflow:auto;">
+		</div>
+		<div draggable="false" style="vertical-align:top;padding:10px;border:1px solid;width:300px;height:600px;display:inline-block;overflow:auto;white-space:nowrap;">
+			<div th:each="reqform : ${reqformList}">
+			<div class="drop-element-div" th:text="${reqform.req_data_cont}" draggable="true" style="border: 1px solid black;" ondrop="drop(ev);">
+			</div>
+			</div>
+	    </div>
+	</div>
+</th:block>
+
+</body>
+</html>

@@ -1,0 +1,80 @@
+<script>
+
+
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+var target;
+function drag(ev) {
+	//ev.dataTransfer.setData("text",ev.target.id);
+	target = ev.target;
+}
+function drop(ev) {
+  ev.preventDefault();
+  var data = ev.dataTransfer.getData("text");
+  ev.target.appendChild(document.getElementById(data));
+}
+
+function dragin(ev) {
+	$(ev).addClass(".hovered");
+}
+
+function dragout(ev) {
+	$(ev).removeClass(".hovered");
+}
+
+function dropin(ev) {
+	$(ev).html("");
+	$(ev).append($(target).clone());
+	alert($(ev).closest('tr').prevAll().length+":"+$(ev).closest('td').prevAll().length+":"+$(ev).css("background-color"));
+}
+
+function loadExcelForm() {
+	//$("#requestFormLoadSpinner").show();
+	var param = new FormData(document.getElementById('excelLoad'));
+
+	//$("#excelLoadArea").load("/readPOI", param);
+	$.ajax({
+			    url : "/readPOI",
+			    type : 'POST',
+			    data : param,
+			    processData : false,
+			    contentType : false,
+				success: function (data) {
+		//			$("#requestFormLoadSpinner").hide();
+					$("#excelLoadArea").html(data);
+					
+				},
+				error: function (jqXHR) { 
+		//			$("#requestFormLoadSpinner").hide();
+					alert(jqXHR.responseText); 
+					}
+	}); 
+}
+</script>
+
+<div style="width:100%;height:95%;overflow:none;">
+	<h3 style="margin-left:30px;">양식 등록</h3>
+	<hr>	
+    <div style="width:100%;height:90%;overflow:none;">
+    	<div style="width:70%;height:100%;display:inline-block;">
+		    <form id="excelLoad" method="post" enctype="multipart/form-data" action="/readPOI"> 
+		    	<span style="float:left;width:80px;" >제목 : </span>
+		    	<input type="text" style="width:55%;float:left;"/>
+		    	<input type="button" value="양식저장" style="float:right;margin-right:40px;" onclick="enrollRequestForm();"/>
+			    <input type="file" name="file" accept=".xls,.xlsx" style="float:left;margin-left:20px;" onchange="loadExcelForm();"/> 
+		    </form>
+			<div id="excelLoadArea" style="border:1px solid;width:95%;height:95%;float:left;margin-left:20px;margin-top:5px;display:inline-block;overflow:auto;">
+			</div>
+		</div>
+		<div style="vertical-align:top;padding:10px;width:20%;height:100%;display:inline-block;overflow:auto;white-space:nowrap;">
+		<input type="button" value="재설정"/>
+		<div draggable="false" style="border:1px solid;">
+			<div th:each="reqform : ${reqformList}">
+			<div class="drop-element-div" th:text="${reqform.req_data_cont}" draggable="true" ondrop="drop(ev);">
+			</div>
+			</div>
+	    </div>
+	    </div>
+	</div>
+</div>

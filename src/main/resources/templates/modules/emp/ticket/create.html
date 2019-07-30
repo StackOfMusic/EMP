@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<!-- 
+*Default Form(col size는 총 12를 두고 배분한다. 기본은 제목1, 내용11)
+                <div class="form-group">
+                  <label for="reqeustUser" class="col-sm-1 control-label">항목</label>
+                  <div class="col-sm-11">
+                  <input id="requestUser" type="text" class="form-control" placeholder="항목..">
+                  </div>
+                </div>
+
+*2Part Form(제목1, 내용5, 제목1, 내용5)
+                <div class="form-group">
+                  <label for="nameSpace1" class="col-sm-1 control-label">항목</label>
+                  <div class="col-sm-5">
+                  <input id="nameSpace1" type="text" class="form-control" placeholder="항목..">
+                  </div>
+                  <label for="nameSpace2" class="col-sm-1 control-label">항목2</label>
+                  <div class="col-sm-5">
+                  <input id="nameSpace2" type="text" class="form-control" placeholder="항목2..">
+                  </div>
+                </div>
+
+*3Part Form(제목1, 내용3, 제목1, 내용3, 제목1, 내용3)
+                <div class="form-group">
+                  <label for="nameSpace1" class="col-sm-1 control-label">항목</label>
+                  <div class="col-sm-3">
+                  <input id="nameSpace1" type="text" class="form-control" placeholder="항목..">
+                  </div>
+                  <label for="nameSpace2" class="col-sm-1 control-label">항목2</label>
+                  <div class="col-sm-3">
+                  <input id="nameSpace2" type="text" class="form-control" placeholder="항목2..">
+                  </div>
+                  <label for="nameSpace3" class="col-sm-1 control-label">항목3</label>
+                  <div class="col-sm-3">
+                  <input id="nameSpace3" type="text" class="form-control" placeholder="항목3..">
+                  </div>
+                </div>
+
+*small 2Part Form(제목1, 내용3, 제목1, 내용3. 뒤 4칸은 공란)
+                <div class="form-group">
+                  <label for="nameSpace1" class="col-sm-1 control-label">항목</label>
+                  <div class="col-sm-3">
+                  <input id="nameSpace1" type="text" class="form-control" placeholder="항목..">
+                  </div>
+                  <label for="nameSpace2" class="col-sm-1 control-label">항목2</label>
+                  <div class="col-sm-3">
+                  <input id="nameSpace2" type="text" class="form-control" placeholder="항목2..">
+                  </div>
+                </div>
+
+
+
+
+
+
+
+
+
+ -->          
+<script>
+$("#createTicketForm").bind("submit", function() {
+	//$fancybox.showActivity();
+	
+	$.ajax({
+		type	: "POST",
+		
+		url		: "/ticket/issuing.do",
+		data	: $(this).serialize(),
+		success	: function(data) {
+			alert("등록 완료되었습니다.");
+			location.href="/ticket/summary";
+		},
+        complete : function(data) {
+            // 통신이 실패했어도 완료가 되었을 때 이 함수를 타게 된다.
+            // TODO
+              //alert('통신완료 data : ' + data.status);
+	    },
+        error:function(request,status,error){
+          alert("code:  "+request.status+"\n"+"message:  "+request.responseText+"\n"+"error:  "+error);
+        }	
+	});
+	return false;
+});
+
+function load_popup_userSelect() {
+	
+	load_popup("/ticket/userSelect", null, 300, 300);
+}
+
+</script>
+
+
+        <div class="box box-warning">
+            <div class="box-header with-border" style="display:none;">
+              <h3 class="box-title">요청서 작성 페이지</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form id="createTicketForm" class="form-horizontal" autocomplete="off">
+              <div class="box-body">
+<!------------------------------------------------------------------------------>
+
+                <div class="form-group">
+                  <label for="reqUser" class="col-sm-1 control-label">요청자</label>
+                  <div class="col-sm-3">
+                  <input th:value="${loginUser.name+'('+loginUser.mobile+')'}" name="reqUser" id="requestUser" type="text" class="form-control" placeholder="입력하세요.." readonly>
+                  <input th:value="${loginUser.id}" name="reqUserId" id="requestUserId" type="hidden">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="location" class="col-sm-1 control-label">지역</label>
+                  <div class="col-sm-3">
+                  <input name="location" id="location" type="text" class="form-control" placeholder="입력하세요..">
+                  </div>
+                  <label for="target" class="col-sm-1 control-label">국소</label>
+                  <div class="col-sm-3">
+                  <input name="target" id="target" type="text" class="form-control" placeholder="입력하세요..">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="recvUser" class="col-sm-1 control-label">접수자</label>
+                  <div class="col-sm-3">
+	              <div class="input-group" onclick="load_popup_userSelect();">
+	                <span class="input-group-addon"><i class="fa fa-search"></i></span>
+	                <input name="recvUser" id="recvUser" type="text" class="form-control" placeholder="선택하세요.">
+	                <input name="recvUserId" id="recvUserId" type="hidden">
+	              </div>
+                  </div>
+                  <label for="nameSpace2" class="col-sm-1 control-label">장비군</label>
+                  <div class="col-sm-3">
+	              <div class="input-group" onclick="load_module_popup_equipmentSelect();">
+	                <span class="input-group-addon"><i class="fa fa-search"></i></span>
+	                <input name="equip" id="equip" type="text" class="form-control" placeholder="선택하세요.">
+	                <input name="equipId" id="equipId" type="hidden">
+	                <input name="progress" id="progress" type="hidden" value="1">
+	              </div>
+                  </div>
+                </div>
+
+
+
+                <div class="form-group">
+                  <label for="content" class="col-sm-1 control-label">요청 내용</label>
+                  <div class="col-sm-11">
+                  <textarea name="content" id="content" class="form-control" rows="10" placeholder="내용을 입력하세요 ..."></textarea>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="fileAppend" class="col-sm-1 control-label">파일 첨부</label>
+                  <div class="col-sm-11">
+                  <input name="fileAppend" id="fileAppend" type="file" multiple="multiple" class="form-control" placeholder="항목3..">
+                  <textarea id="fileAppendTextArea" class="form-control" readonly style="display:none"></textarea>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <div class="col-sm-offset-1 col-sm-1">
+                    <div class="checkbox">
+                      <label>
+                        <input name="mailCheck" id="mailCheck" type="checkbox" checked> Mail
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-sm-1">
+                    <div class="checkbox">
+                      <label>
+                        <input name="smsCheck" id="smsCheck" type="checkbox" checked> SMS
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--                                 -->
+
+
+              </div>   
+              
+<!--               
+         <div class="box box-warning">
+            <div class="box-header with-border" style="display:none;">
+              <h3 class="box-title">요청서 작성 페이지</h3>
+            </div>
+        
+            <div class="box-body">
+              <form role="form">
+             
+                <div class="form-group">
+                  <label>요청자</label>
+                  <input type="text" class="form-control" placeholder="클릭하여 요청자 검색">
+                </div>
+                <div class="form-group">
+                  <label>요청자</label>
+                  <input type="text" class="form-control" placeholder="클릭하시면 요청자를 검색할 수 있습니다 ...">
+                </div>
+                <div class="form-group">
+                  <label>요청자</label>
+                  <input type="text" class="form-control" placeholder="클릭하시면 요청자를 검색할 수 있습니다 ...">
+                </div>
+                <div class="form-group">
+                  <label>요청자</label>
+                  <input type="text" class="form-control" placeholder="클릭하시면 요청자를 검색할 수 있습니다 ...">
+                </div>
+                <div class="form-group">
+                  <label>Text Disabled</label>
+                  <input type="text" class="form-control" placeholder="Enter ..." disabled>
+                </div>
+             <h4>With checkbox and radio inputs</h4>
+              <div class="row">
+                <div class="col-lg-4">
+                  <label>요청자</label>
+                 
+                </div>
+               
+                <div class="col-lg-4">
+                  <label>요청자</label>
+               
+                </div>
+           
+              </div>
+     
+              <div class="row">
+                <div class="col-lg-4">
+                  <div class="input-group">
+                        <span class="input-group-addon">
+                          <input type="checkbox">
+                        </span>
+                    <input type="text" class="form-control">
+                  </div>
+            
+                </div>
+          
+                <div class="col-lg-4">
+                  <div class="input-group">
+                        <span class="input-group-addon">
+                          <input type="radio">
+                        </span>
+                    <input type="text" class="form-control">
+                  </div>
+                
+                </div>
+             
+              </div>
+       
+             
+                <div class="form-group">
+                  <label>Textarea</label>
+                  <textarea class="form-control" rows="3" placeholder="Enter ..."></textarea>
+                </div>
+                <div class="form-group">
+                  <label>Textarea Disabled</label>
+                  <textarea class="form-control" rows="3" placeholder="Enter ..." disabled></textarea>
+                </div>
+
+             
+                <div class="form-group has-success">
+                  <label class="control-label" for="inputSuccess"><i class="fa fa-check"></i> Input with success</label>
+                  <input type="text" class="form-control" id="inputSuccess" placeholder="Enter ...">
+                  <span class="help-block">Help block with success</span>
+                </div>
+                <div class="form-group has-warning">
+                  <label class="control-label" for="inputWarning"><i class="fa fa-bell-o"></i> Input with
+                    warning</label>
+                  <input type="text" class="form-control" id="inputWarning" placeholder="Enter ...">
+                  <span class="help-block">Help block with warning</span>
+                </div>
+                <div class="form-group has-error">
+                  <label class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i> Input with
+                    error</label>
+                  <input type="text" class="form-control" id="inputError" placeholder="Enter ...">
+                  <span class="help-block">Help block with error</span>
+                </div>
+
+               
+                <div class="form-group">
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox">
+                      Checkbox 1
+                    </label>
+                  </div>
+
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox">
+                      Checkbox 2
+                    </label>
+                  </div>
+
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" disabled>
+                      Checkbox disabled
+                    </label>
+                  </div>
+                </div>
+
+   
+                <div class="form-group">
+                  <div class="radio">
+                    <label>
+                      <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                      Option one is this and that&mdash;be sure to include why it's great
+                    </label>
+                  </div>
+                  <div class="radio">
+                    <label>
+                      <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                      Option two can be something else and selecting it will deselect option one
+                    </label>
+                  </div>
+                  <div class="radio">
+                    <label>
+                      <input type="radio" name="optionsRadios" id="optionsRadios3" value="option3" disabled>
+                      Option three is disabled
+                    </label>
+                  </div>
+                </div>
+
+     
+                <div class="form-group">
+                  <label>Select</label>
+                  <select class="form-control">
+                    <option>option 1</option>
+                    <option>option 2</option>
+                    <option>option 3</option>
+                    <option>option 4</option>
+                    <option>option 5</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Select Disabled</label>
+                  <select class="form-control" disabled>
+                    <option>option 1</option>
+                    <option>option 2</option>
+                    <option>option 3</option>
+                    <option>option 4</option>
+                    <option>option 5</option>
+                  </select>
+                </div>
+
+              
+                <div class="form-group">
+                  <label>Select Multiple</label>
+                  <select multiple class="form-control">
+                    <option>option 1</option>
+                    <option>option 2</option>
+                    <option>option 3</option>
+                    <option>option 4</option>
+                    <option>option 5</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Select Multiple Disabled</label>
+                  <select multiple class="form-control" disabled>
+                    <option>option 1</option>
+                    <option>option 2</option>
+                    <option>option 3</option>
+                    <option>option 4</option>
+                    <option>option 5</option>
+                  </select>
+                </div>
+
+              </form>
+            </div>
+      
+          </div>
+   
+          
+ -->
+              <!-- /.box-body -->
+   			  <div class="box-footer col-sm-offset-1">
+                <button type="submit" class="btn btn-primary">등록</button>
+              </div>
+              <!-- /.box-footer -->
+            </form>
+          </div>
+<script>
+	function equipSelect(target) {
+		//EquipmentSelect에서 마지막 옵션 선택했을 때 담당자명, 폰번호 전달 함수
+		if (target == null) {
+			$("#equip").val("");
+			$("#equipId").val(null);
+			
+		} else {
+			$("#equipId").val(target.id);
+			//$("#equip").val($("#equip1 selected").html() + ' > ' + $("#equip2 selected"));
+		}
+
+	}
+
+	function load_module_popup_equipmentSelect() {
+		var data = {
+			"equipmentID" : "equipId",
+			"equipValue" : "equip",
+			"equipManagerValue" : "recvUser"
+		};
+
+		load_popup('/ticket/equipmentSelect', data, 700, 300);
+	}
+</script>

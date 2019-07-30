@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/default">
+<head>
+<title>엑셀 폼 등록 테스트</title>
+<script>
+
+function readyAction() {
+
+}
+
+function load_popup_requestFormDetail() {
+	load_popup('/management/requestFormDetail');
+}
+
+function download_file() {
+	
+	location.href = "/action/download.do?contentType=requestform&contentId=3"; 
+
+}
+
+</script>
+
+</head>
+<!-- Content Wrapper. Contains page content -->
+
+<!-- /* test */ -->
+<body>
+<th:block layout:fragment="content">
+<!-- /.content-header -->
+<input type="button" value="등록" onclick="load_popup_requestFormDetail();"/>
+<input type="button" value="테스트" onclick="download_file();"/>
+</th:block>
+
+</body>
+</html>

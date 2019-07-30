@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<script>
+
+function team_detail_popup(el) {	
+	//alert($(el).parent().eq(0).children().html());
+	load_popup("/management/teamDetail", {"team_id": $(el).parent().eq(0).children().html()});
+}
+
+
+</script>
+</head>
+<body>
+
+	<div style="width:100%;padding-right:40px;">
+		<table class="table table-striped table-hover" style="margin-left :20px;margin-top:20px;" id="list_table">
+			<colgroup>
+				<!-- column 의 설정을 할수 있다. -->
+				<col style="width:20px;">
+				<col style="width:20px;">
+				<col style="width:20px;">
+				<col style="width:20px;">
+				<col style="width:20px;">
+				<col style="width:20px;">
+				<col style="width:20px;">
+			</colgroup>
+				<thead>
+				<tr>
+					<th>번호</th>
+					<th>구분</th>
+					<th>사업부</th>
+					<th>팀명</th>
+					<th>Mail</th>
+					<th>Action</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+			    <tr th:each="team : ${teamList}">
+					<td  th:text="${team.team_id}" th:onclick="'javascript:team_detail_popup(this);'"></td>
+					<td  th:text="${team.type}" th:onclick="'javascript:team_detail_popup(this);'"></td>
+					<td  th:text="${team.category1}" th:onclick="'javascript:team_detail_popup(this);'"></td>
+					<td  th:text="${team.category2}" th:onclick="'javascript:team_detail_popup(this);'"></td>
+					<td  th:text="${team.mail}" th:onclick="'javascript:team_detail_popup(this);'"></td>
+					<td th:onclick='team_update_table(this);'>Update</td>
+					<td th:onclick='team_delete_table(this);'>Delete</td>
+			    </tr>
+    		</tbody>
+		</table>
+		<center>
+			<h4>추가 입력 테이블</h4>
+		</center>
+			
+	</div>
+</body>
+</html>

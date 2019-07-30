@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorator="layouts/default">
+<head>
+<title>내 요청 보기</title>
+<script>
+var ticketId;
+
+function select_list(data) {
+	this.select_nodes = [];
+	this.value = data;
+	this.pos = 0;
+	this.listSize = 0;
+}
+
+select_list.prototype.toOptionString=function() {
+	var returnHTML = "<option value='0'>전체</option>\n";
+	for(var i = 0 ; i < this.listSize ; i++ ) {
+		returnHTML = returnHTML + "<option value='"+(i+1)+"'>"+this.select_nodes[i].value+"</option>\n";
+		
+	}
+	return returnHTML;
+}
+
+select_list.prototype.add=function(data1, data2, data3) {
+	var i = 0;
+	for(i = 0 ; i < this.listSize ; i++ ) {
+		if(this.select_nodes[i].value == data1) {
+			this.select_nodes[i].add2(data2, data3);
+			break;
+		} 
+	}
+
+	if(i == this.listSize) {
+		this.select_nodes[this.listSize] = new select_list(data1);
+		this.select_nodes[this.listSize++].add2(data2, data3);
+	}
+}
+
+select_list.prototype.add2=function(data1, data2) {
+	var i = 0;
+	for(i = 0 ; i < this.listSize ; i++ ) {
+		if(this.select_nodes[i].value == data1) {
+			this.select_nodes[i].add3(data2);
+			break;
+		}
+	}
+	
+	if(i == this.listSize) {
+		this.select_nodes[this.listSize] = new select_list(data1);
+		this.select_nodes[this.listSize++].add3(data2);
+	}
+	
+}
+
+select_list.prototype.add3=function(data) {
+	this.select_nodes[this.listSize] = new select_list(data);
+	this.listSize++;
+}
+
+</script>
+
+<script th:inline="javascript">
+
+
+
+
+function readyAction() {
+	setHeaderTitle("내 요청 보기", "fa fa-vcard-o");
+	$("#quickIssuingArea").load("/ticket/quickCreate.view");
+	$("#quickIssuingSpinner").hide();
+	$("#quickIssuingIcon").show();
+	$("#reqTicketListArea").load("/ticket/reqTicketList");
+	$("#reqTicketListSpinner").hide();
+	$("#reqTicketListIcon").show();
+	$("#recvTicketListArea").load("/ticket/recvTicketList");
+	$("#recvTicketListSpinner").hide();
+	$("#recvTicketListIcon").show();
+}
+
+
+
+
+</script>
+<style type="text/css">
+.vr
+{
+  display:inline;
+  height:100%;
+  width:1px;
+  border:1px inset #AAAAAA;
+  margin:10px;
+}
+</style>
+</head>
+<!-- Content Wrapper. Contains page content -->
+
+<!-- /* test */ -->
+
+
+<body onload="javascript:ready()">
+<th:block layout:fragment="content">
+
+    <!-- /.content-header -->
+ 
+	<div id="quickIssuingDiv" style="margin:20px;padding:10px;background-color: #FFFFFF;border-radius:10px;">
+		<div style="margin-left:30px;margin-bottom:10px;font-size:25px;"><div id="quickIssuingSpinner" class="fa fa-spinner fa-spin"></div><i id="quickIssuingIcon" style="display:none;" class="fa fa-plane"></i> 빠른요청</div>
+		<section id="quickIssuingArea">
+		</section>
+	</div>
+	<div id="reqTicketListDiv" style="background-color:#FFFFFF;margin:20px;padding:10px;">
+		<div style="margin-left:30px;font-size:25px;"><div id="reqTicketListSpinner" class="fa fa-spinner fa-spin"></div><i id="reqTicketListIcon" style="display:none;" class="fa fa-list-alt"></i> 내 요청 항목</div>
+		<section id="reqTicketListArea">
+		</section>
+	</div>
+	<div id="recvTicketListDiv" style="background-color:#FFFFFF;margin:20px;padding:10px;">
+		<div style="margin-left:30px;font-size:25px;"><div id="recvTicketListSpinner" class="fa fa-spinner fa-spin"></div><i id="recvTicketListIcon" style="display:none;" class="fa fa-list-alt"></i> 내 접수 항목</div>
+		<section id="recvTicketListArea">
+		</section>
+	</div>
+
+</th:block>
+</body>
+</html>

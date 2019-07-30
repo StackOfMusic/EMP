@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      >
+<div style="min-width:300px;min-height:300px;width:100%;height:680px;text-align:center;">
+      
+<head>
+<title>fileupload</title>
+<style>
+#div1 {
+  width: 350px;
+  height: 70px;
+  padding: 10px;
+  border: 1px solid #aaaaaa;
+}
+</style>
+<script>
+
+function readyAction() {
+
+}
+
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+var target;
+function drag(ev) {
+	//ev.dataTransfer.setData("text",ev.target.id);
+	target = ev.target;
+}
+function drop(ev) {
+
+  ev.preventDefault();
+  var data = ev.dataTransfer.getData("text");
+  ev.target.appendChild(document.getElementById(data));
+}
+
+function dragin(ev) {
+	$(ev).addClass(".hovered");
+}
+
+function dragout(ev) {
+	$(ev).removeClass(".hovered");
+}
+
+function dropin(ev) {
+	
+	$(ev).html("#"+$(target).html().trim());
+}
+
+function loadExcelForm() {
+	var param = new FormData(document.getElementById('excelLoad'));
+	var param2 = new FormData(document.getElementById('excelLoadArea'));
+	//$("#excelLoadArea").load("/readPOI", param);
+	$.ajax({
+			    url : "/readPOI",
+			    type : 'POST',
+			    data : param,
+			    processData : false,
+			    contentType : false,
+				success: function (data) { 
+					$("#excelLoadArea").html(data);
+				},
+				error: function (jqXHR) { 
+					alert(jqXHR.responseText); 
+					}
+	}); 
+}
+</script>
+
+</head>
+<!-- Content Wrapper. Contains page content -->
+
+<!-- /* test */ -->
+
+
+<body>
+<th:block layout:fragment="content">
+    <!-- /.content-header -->
+
+
+	
+
+	<div>
+	<center>
+    <form id="excelLoad" method="post" enctype="multipart/form-data" action="/readPOI">
+	    <input type="file" name="file" accept=".xls,.xlsx" /> 
+	    <input type="button" value="Display file content" onclick="loadExcelForm();"/> 
+    </form> 
+    </center>
+    </div>
+    <div>
+		<div id="excelLoadArea" style="border:1px solid;width:1000px;height:600px;display:inline-block;overflow:auto;">
+		</div>
+		<div draggable="false" style="vertical-align:top;padding:10px;border:1px solid;width:300px;height:600px;display:inline-block;overflow:auto;white-space:nowrap;">
+			<div draggable="true" style="border: 1px solid black;" ondrop="drop(ev);">
+			지역
+			</div>
+			<div draggable="true" style="border: 1px solid black;">
+			장비명
+			</div>
+			<div draggable="true" style="border: 1px solid black;">
+			국소
+			</div>
+			<div draggable="true" style="border: 1px solid black;">
+			제조사
+			</div>
+			<div draggable="true" style="border: 1px solid black;">
+			지원 구분
+			</div>
+			<div draggable="true" style="border: 1px solid black;">
+			지원 작업자
+			</div>
+			<div draggable="true" style="border: 1px solid black;">
+			작업 종류
+			</div>
+			<div draggable="true" style="border: 1px solid black;">
+			유지보수 업체
+			</div>
+			<div draggable="true" style="border: 1px solid black;">
+			지원 내역(요약)
+			</div>
+			<div draggable="true" style="border: 1px solid black;">
+			지원 일자
+			</div>
+			<div draggable="true" style="border: 1px solid black;">
+			지원 요청자
+			</div>
+			<div draggable="true" style="border: 1px solid black;">
+			지원 확인자
+			</div>
+			<div draggable="true" style="border: 1px solid black;">
+			불량 내역/ 요청 내역
+			</div>
+			<div draggable="true" style="border: 1px solid black;">
+			조치 내역/ 지원 내역(상세)
+			</div>
+			<div draggable="true" style="border: 1px solid black;">
+			특이 사항/ 비고
+			</div>
+			<div draggable="true" style="border: 1px solid black;">
+			Offline 지원
+			</div>
+			<div draggable="true" style="border: 1px solid black;">
+			본부
+			</div>
+			<div draggable="true" style="border: 1px solid black;">
+			출동 국소
+			</div>
+			<div draggable="true" style="border: 1px solid black;">
+			출동 인원
+			</div>
+			<div draggable="true" style="border: 1px solid black;">
+			차량 이용시 (편도기준)
+			</div>
+			<div draggable="true" style="border: 1px solid black;">
+			통행료
+			</div>
+			<div draggable="true" style="border: 1px solid black;">
+			주행거리
+			</div>
+			<div draggable="true" style="border: 1px solid black;">
+			도서 출입시 (편도기준)
+			</div>
+			<div draggable="true" style="border: 1px solid black;">
+			배 운임
+			</div>
+			<div draggable="true" style="border: 1px solid black;">
+			지원시간(시간단위)
+			</div>
+			<div draggable="true" style="border: 1px solid black;">
+			주간
+			</div>
+			<div draggable="true" style="border: 1px solid black;">
+			야간
+			</div>
+			<div draggable="true" style="border: 1px solid black;">
+			숙박 인원
+			</div>
+			<div draggable="true" style="border: 1px solid black;">
+			Online 지원건수(주/야)
+			</div>
+	    </div>
+	</div>
+</th:block>
+
+</body>
+</html>

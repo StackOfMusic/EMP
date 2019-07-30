@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/default">
+<head>
+    <title>이집 CSS 맛집이네.</title>
+
+    <script>
+        var ticketId;
+
+        function select_list(data) {
+            this.select_nodes = [];
+            this.value = data;
+            this.pos = 0;
+            this.listSize = 0;
+        }
+
+        select_list.prototype.toOptionString=function() {
+            var returnHTML = "<option value='0'>전체</option>\n";
+            for(var i = 0 ; i < this.listSize ; i++ ) {
+                returnHTML = returnHTML + "<option value='"+(i+1)+"'>"+this.select_nodes[i].value+"</option>\n"
+
+            }
+            return returnHTML;
+        }
+
+        select_list.prototype.add=function(data1, data2, data3) {
+            var i = 0;
+            for(i = 0 ; i < this.listSize ; i++ ) {
+                if(this.select_nodes[i].value == data1) {
+                    this.select_nodes[i].add2(data2, data3);
+                    break;
+                }
+            }
+
+            if(i == this.listSize) {
+                this.select_nodes[this.listSize] = new select_list(data1);
+                this.select_nodes[this.listSize++].add2(data2, data3);
+            }
+        }
+
+        select_list.prototype.add2=function(data1, data2) {
+            var i = 0;
+            for(i = 0 ; i < this.listSize ; i++ ) {
+                if(this.select_nodes[i].value == data1) {
+                    this.select_nodes[i].add3(data2);
+                    break;
+                }
+            }
+
+            if(i == this.listSize) {
+                this.select_nodes[this.listSize] = new select_list(data1);
+                this.select_nodes[this.listSize++].add3(data2);
+            }
+        }
+
+        select_list.prototype.add3=function(data) {
+            this.select_nodes[this.listSize] = new select_list(data);
+            this.listSize++;
+        }
+
+    </script>
+
+    <script th:inline="javascript">
+        var select_team = new select_list("team");
+        var select_equip = new select_list("equip");
+
+
+        /*<![CDATA[*/
+
+        /*[# th:each="equip : ${equipmentList}"]*/
+        //  select_equip.add(/*[[${equip?.category1}]]*/, /*[[${equip?.category2}]]*/, /*[[${equip?.category3}]]*/);
+        /*[/]*/
+
+        /*]]>*/
+
+        /*<![CDATA[*/
+
+        /*[# th:each="team : ${teamList}"]*/
+        //   select_team.add(/*[[${team?.type}]]*/, /*[[${team?.category1}]]*/, /*[[${team?.category2}]]*/);
+        /*[/]*/
+
+        /*]]>*/
+
+
+
+
+        function clean_select(element) {
+            element.html("<option value='0'>전체</option>");
+        }
+
+        function selectChange(element) {
+            var team1 = $("#team1 option:selected").val();
+            var team2 = $("#team2 option:selected").val();
+            var team3 = $("#team3 option:selected").val();
+            var equip1 = $("#equip1 option:selected").val();
+            var equip2 = $("#equip2 option:selected").val();
+            var equip3 = $("#equip3 option:selected").val();
+
+
+            if(element.options[element.selectedIndex].value == 0) {
+
+                switch(element.id) {
+                    case "team1":
+                        clean_select($("#team2"));
+                        clean_select($("#team3"));
+                        break;
+                    case "team2":
+                        clean_select($("#team3"));
+                        break;
+                    case "equip1":
+                        clean_select($("#equip2"));
+                        clean_select($("#equip3"));
+                        break;
+                    case "equip2":
+                        clean_select($("#equip3"));
+                        break;
+                }
+
+            } else {
+                switch(element.id) {
+                    case "team1":
+                        $("#team2").html(select_team.select_nodes[team1-1].toOptionString());
+                        clean_select($("#team3"));
+                        break;
+                    case "team2":
+                        $("#team3").html(select_team.select_nodes[team1-1].select_nodes[team2-1].toOptionString());
+                        break;
+                    case "equip1":
+                        $("#equip2").html(select_equip.select_nodes[equip1-1].toOptionString());
+                        clean_select($("#equip3"));
+                        break;
+                    case "equip2":
+                        $("#equip3").html(select_equip.select_nodes[equip1-1].select_nodes[equip2-1].toOptionString());
+                        break;
+                }
+            }
+        }
+
+        function readyAction() {
+            $("#team1").html(select_team.toOptionString());
+            $("#equip1").html(select_equip.toOptionString());
+            $("#ticketListArea").load("/ticket/ticketList");
+            $("#ticketListSpinner").hide();
+            $("#ticketListIcon").show();
+        }
+
+        function searchTicket() {
+            $("#ticketListArea").html("");
+            $("#ticketListIcon").hide();
+            $("#ticketListSpinner").show();
+            $("#ticketListArea").load("/ticket/ticketList");//json으로 검색 항목들 넣어줘야함
+            $("#ticketListSpinner").hide();
+            $("#ticketListIcon").show();
+        }
+
+        function excelDown() {
+            location.href="/excelDown.do";
+        }
+
+
+    </script>
+
+
+</head>
+<!-- Content Wrapper. Contains page content -->
+
+<!-- /* test */ -->
+
+
+<body onload="javascript:ready()">
+<th:block layout:fragment="content">
+    <!-- /.content-header -->
+
+
+
+<!--    <div>-->
+<!--        <input type="button" value="btn-primary" class='btn-primary'/>-->
+<!--        <input type="button" value="btn-default" class='btn-default'/>-->
+<!--        <input type="button" value="btn-default" class='btn'/>-->
+<!--        <input type="button" value="btn uppercase" class='btn uppercase'/>-->
+<!--        <input type="button" value="btn btn-flat" class='btn btn-flat'/>-->
+<!--        <input type="button" value="btn-info" class='btn-info'/>-->
+<!--        <input type="button" value="btn-danger" class='btn-danger'/>-->
+<!--        <input type="button" value="btn-outline" class='btn-outline'/>-->
+<!--        <input type="button" value="btn-app" class='btn-app'/>-->
+<!--        <br>-->
+
+<!--        &lt;!&ndash;    <div class="box">&ndash;&gt;-->
+
+<!--            <span class=" box">box</span>-->
+<!--            <span class=" box box-primary" >box-primary</span>-->
+<!--            <span class=" box box-info" >box-info</span>-->
+<!--            <span class=" box box-danger" >box-danger</span>-->
+<!--            <span class=" box box-warning" >box-warning</span>-->
+<!--            <span class=" box box-success" >box-success</span>-->
+<!--            <span class=" box nav-stacked" >box-nav-stacked</span><br>-->
+<!--            <span class="box border-right" >box border-right</span>-->
+<!--            <span class="box box-solid">  box- solid </span>-->
+<!--            <span class="box box-solid box-warning " > box box-solid box-warning  </span>-->
+<!--            <span class="box box-comments " > box box-comments  </span>-->
+<!--            <span class="box box-comments box-comment " > box box-comments box-comment  </span>-->
+<!--            <span class="box-comments username" >  box-comments username </span>-->
+
+
+<!--    <div class="info-box"> info-box </div>-->
+
+<!--        <div class="box box-solid box-default">-->
+<!--            <div class="box-header">-->
+<!--                <h3 class="box-title">Default Solid Box</h3>-->
+<!--            </div>&lt;!&ndash; /.box-header &ndash;&gt;-->
+<!--            <div class="box-body">-->
+<!--                The body of the box-->
+<!--            </div>&lt;!&ndash; /.box-body &ndash;&gt;-->
+<!--        </div>-->
+<div style="margin:20px;padding:10px;background-color: #FFFFFF;border-radius:10px">
+    <div class="main-container" style="text-align:center; vertical-align:middle;" >
+        <div class="row" style="float: left; display: inline; ">
+                <div class="col-md-4">
+                    <div class="box box-solid box-primary" style="height: 200px; width: 300px; margin: 10px;">
+                        <div class="box-header">
+                            <h3 class="box-title">[필터1]소속</h3>
+                        </div><!-- /.box-header -->
+                        <div class="box-body">
+                            <b>구분</b><select id="team1" style="width:140px;" onchange="selectChange(this)">
+                            <option value="0">전체</option></select><br><br>
+                            <b>본부</b><select id="team2" style="width:140px;" onchange="selectChange(this)">
+                            <option value="0">전체</option></select><br><br>
+                            <b>팀</b><select id="team3" style="width:140px;" onchange="selectChange(this)">
+                            <option value="0">전체</option></select><br>
+                        </select>
+                        </div><!-- /.box-body -->
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="box box-solid box-primary" style="height: 200px; width: 300px; margin-left: 70px; margin-top: 10px;">
+                         <div class="box-header">
+                              <h3 class="box-title">[필터2]장비군</h3>
+                         </div><!-- /.box-header -->
+                         <div class="box-body" style="align-content: center; padding: 10px">
+
+                             <b>   구분</b><select id="team1" style="width:140px;" onchange="selectChange(this)">
+                                 <option value="0">전체</option></select><br><br>
+                             <b>   본부</b><select id="team2" style="width:140px;" onchange="selectChange(this)">
+                             <option value="0">전체</option></select><br><br>
+                             <b>   팀</b><select id="team3" style="width:140px;" onchange="selectChange(this)">
+                             <option value="0">전체</option></select><br>
+                         </div><!-- /.box-body -->
+                     </div>
+                </div>
+                <button class="btn-danger" style="line-height:25px; text-align:center; padding:2px;margin-left:100px; box-sizing:content-box;margin-top:50px;width:60px;height:35px;" onclick="searchTicket();">조회</button>
+            </div>
+    </div>
+</div>
+
+
+
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Bordered Table</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th style="width: 10px">#</th>
+                                    <th>Task</th>
+                                    <th>Progress</th>
+                                    <th style="width: 40px">Label</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>1.</td>
+                                    <td>Update software</td>
+                                    <td>
+                                        <div class="progress progress-xs">
+                                            <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-danger">55%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>2.</td>
+                                    <td>Clean database</td>
+                                    <td>
+                                        <div class="progress progress-xs">
+                                            <div class="progress-bar bg-warning" style="width: 70%"></div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-warning">70%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>3.</td>
+                                    <td>Cron job running</td>
+                                    <td>
+                                        <div class="progress progress-xs progress-striped active">
+                                            <div class="progress-bar bg-primary" style="width: 30%"></div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-primary">30%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>4.</td>
+                                    <td>Fix and squish bugs</td>
+                                    <td>
+                                        <div class="progress progress-xs progress-striped active">
+                                            <div class="progress-bar bg-success" style="width: 90%"></div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-success">90%</span></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer clearfix">
+                            <ul class="pagination pagination-sm m-0 float-right">
+                                <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+                    <!-- /.card -->
+<!--        <div class="box box-solid box-info">다양한색상</div>-->
+<!--        <div class="box box-solid box-warning">다양한색상</div>-->
+<!--        <div class="box box-solid box-success">다양한색상d</div>-->
+<!--        <div class="box box-solid box-danger">다양한색상</div>-->
+
+
+<!--    <div class="info-box bg-red">-->
+<!--        <span class="info-box-icon"><i class="fa fa-comments-o"></i></span>-->
+<!--        <div class="info-box-content">-->
+<!--            <span class="info-box-text">채오니 TV 구독자</span>-->
+<!--            <span class="info-box-number">41,410</span>-->
+<!--            &lt;!&ndash; The progress section is optional &ndash;&gt;-->
+<!--            <div class="progress">-->
+<!--                <div class="progress-bar" style="width: 70%"></div>-->
+<!--            </div>-->
+<!--            <span class="progress-description">-->
+<!--      70% Increase in 30 Days-->
+<!--    </span>-->
+<!--        </div>-->
+<!--        &lt;!&ndash; /.info-box-content &ndash;&gt;-->
+<!--    </div>-->
+
+
+<!--    <div class="info-box">-->
+<!--        &lt;!&ndash; Apply any bg-* class to to the icon to color it &ndash;&gt;-->
+<!--        <span class="info-box-icon bg-red"><i class="fa fa-star-o"></i></span>-->
+<!--        <div class="info-box-content">-->
+<!--            <span class="info-box-text">Likes</span>-->
+<!--            <span class="info-box-number">93,139</span>-->
+<!--        </div>-->
+<!--        &lt;!&ndash; /.info-box-content &ndash;&gt;-->
+<!--    </div>-->
+
+
+
+<!--        &lt;!&ndash; Construct the box with style you want. Here we are using box-danger &ndash;&gt;-->
+<!--        &lt;!&ndash; Then add the class direct-chat and choose the direct-chat-* contexual class &ndash;&gt;-->
+<!--        &lt;!&ndash; The contextual class should match the box, so we are using direct-chat-danger &ndash;&gt;-->
+<!--        <div class="box box-danger direct-chat direct-chat-danger">-->
+<!--            <div class="box-header with-border">-->
+<!--                <h3 class="box-title">Direct Chat</h3>-->
+<!--                <div class="box-tools pull-right">-->
+<!--                    <span data-toggle="tooltip" title="3 New Messages" class="badge bg-red">3</span>-->
+<!--                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>-->
+<!--                    &lt;!&ndash; In box-tools add this button if you intend to use the contacts pane &ndash;&gt;-->
+<!--                    <button class="btn btn-box-tool" data-toggle="tooltip" title="Contacts" data-widget="chat-pane-toggle"><i class="fa fa-comments"></i></button>-->
+<!--                    <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            &lt;!&ndash; /.box-header &ndash;&gt;-->
+<!--            <div class="box-body">-->
+<!--                &lt;!&ndash; Conversations are loaded here &ndash;&gt;-->
+<!--                <div class="direct-chat-messages">-->
+<!--                    &lt;!&ndash; Message. Default to the left &ndash;&gt;-->
+<!--                    <div class="direct-chat-msg">-->
+<!--                        <div class="direct-chat-info clearfix">-->
+<!--                            <span class="direct-chat-name pull-left">Zelda</span>-->
+<!--                            <span class="direct-chat-timestamp pull-right">23 Jan 2:00 pm</span>-->
+<!--                        </div>-->
+<!--                        &lt;!&ndash; /.direct-chat-info &ndash;&gt;-->
+<!--                        <img class="direct-chat-img" src="../dist/img/user1-128x128.jpg" alt="message user image">-->
+<!--                        &lt;!&ndash; /.direct-chat-img &ndash;&gt;-->
+<!--                        <div class="direct-chat-text">-->
+<!--                            링..링크!-->
+<!--                        </div>-->
+<!--                        &lt;!&ndash; /.direct-chat-text &ndash;&gt;-->
+<!--                    </div>-->
+<!--                    &lt;!&ndash; /.direct-chat-msg &ndash;&gt;-->
+
+<!--                    &lt;!&ndash; Message to the right &ndash;&gt;-->
+<!--                    <div class="direct-chat-msg right">-->
+<!--                        <div class="direct-chat-info clearfix">-->
+<!--                            <span class="direct-chat-name pull-right">Link</span>-->
+<!--                            <span class="direct-chat-timestamp pull-left">23 Jan 2:05 pm</span>-->
+<!--                        </div>-->
+<!--                        &lt;!&ndash; /.direct-chat-info &ndash;&gt;-->
+<!--                        <img class="direct-chat-img" src="../dist/img/user3-128x128.jpg" alt="message user image">-->
+<!--                        &lt;!&ndash; /.direct-chat-img &ndash;&gt;-->
+<!--                        <div class="direct-chat-text">-->
+<!--                            여기가 어디지..-->
+<!--                        </div>-->
+<!--                        &lt;!&ndash; /.direct-chat-text &ndash;&gt;-->
+<!--                    </div>-->
+<!--                    &lt;!&ndash; /.direct-chat-msg &ndash;&gt;-->
+<!--                </div>-->
+<!--                &lt;!&ndash;/.direct-chat-messages&ndash;&gt;-->
+
+<!--                &lt;!&ndash; Contacts are loaded here &ndash;&gt;-->
+<!--                <div class="direct-chat-contacts">-->
+<!--                    <ul class="contacts-list">-->
+<!--                        <li>-->
+<!--                            <a href="#">-->
+<!--                                <img class="contacts-list-img" src="../dist/img/user1-128x128.jpg" alt="Contact Avatar">-->
+<!--                                <div class="contacts-list-info">-->
+<!--              <span class="contacts-list-name">-->
+<!--                Count Dracula-->
+<!--                <small class="contacts-list-date pull-right">2/28/2015</small>-->
+<!--                </span>-->
+<!--                                    <span class="contacts-list-msg">자네..정신이 드는가</span>-->
+<!--                                </div>-->
+<!--                                &lt;!&ndash; /.contacts-list-info &ndash;&gt;-->
+<!--                            </a>-->
+<!--                        </li>-->
+<!--                        &lt;!&ndash; End Contact Item &ndash;&gt;-->
+<!--                    </ul>-->
+<!--                    &lt;!&ndash; /.contatcts-list &ndash;&gt;-->
+<!--                </div>-->
+<!--                &lt;!&ndash; /.direct-chat-pane &ndash;&gt;-->
+<!--            </div>-->
+<!--            &lt;!&ndash; /.box-body &ndash;&gt;-->
+<!--            <div class="box-footer">-->
+<!--                <div class="input-group">-->
+<!--                    <input type="text" name="message" placeholder="Type Message ..." class="form-control">-->
+<!--                    <span class="input-group-btn">-->
+<!--                <button type="button" class="btn btn-danger btn-flat">Send</button>-->
+<!--                </span>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            &lt;!&ndash; /.box-footer&ndash;&gt;-->
+<!--        </div>-->
+<!--        &lt;!&ndash;/.direct-chat &ndash;&gt;-->
+
+
+
+
+
+
+            <div class="col-xs-12">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Responsive Hover Table</h3>
+
+                        <div class="box-tools">
+                            <div class="input-group input-group-sm hidden-xs" style="width: 150px;">
+                                <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
+
+                                <div class="input-group-btn">
+                                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+
+                    <!-- /.box-header -->
+                    <div class="box-body table-responsive no-padding">
+                        <table class="table table-hover">
+                            <tr>
+                                <th>ID</th>
+                                <th>User</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Reason</th>
+                            </tr>
+                            <tr>
+                                <td>183</td>
+                                <td>John Doe</td>
+                                <td>11-7-2014</td>
+                                <td><span class="label label-success">Approved</span></td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                            </tr>
+                            <tr>
+                                <td>219</td>
+                                <td>Alexander Pierce</td>
+                                <td>11-7-2014</td>
+                                <td><span class="label label-warning">Pending</span></td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                            </tr>
+                            <tr>
+                                <td>657</td>
+                                <td>Bob Doe</td>
+                                <td>11-7-2014</td>
+                                <td><span class="label label-primary">Approved</span></td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                            </tr>
+                            <tr>
+                                <td>175</td>
+                                <td>Mike Doe</td>
+                                <td>11-7-2014</td>
+                                <td><span class="label label-danger">Denied</span></td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                            </tr>
+                            <tr>
+                                <td>175</td>
+                                <td>Mike Doe</td>
+                                <td>11-7-2014</td>
+                                <td><span class="label label-danger">Denied</span></td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                            </tr>
+                            <tr>
+                                <td>175</td>
+                                <td>Mike Doe</td>
+                                <td>11-7-2014</td>
+                                <td><span class="label label-danger">Denied</span></td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                            </tr>
+                            <tr>
+                                <td>175</td>
+                                <td>Mike Doe</td>
+                                <td>11-7-2014</td>
+                                <td><span class="label label-danger">Denied</span></td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                            </tr>
+                            <tr>
+                                <td>175</td>
+                                <td>Mike Doe</td>
+                                <td>11-7-2014</td>
+                                <td><span class="label label-danger">Denied</span></td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                            </tr>
+                            <tr>
+                                <td>175</td>
+                                <td>Mike Doe</td>
+                                <td>11-7-2014</td>
+                                <td><span class="label label-danger">Denied</span></td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                            </tr>
+                            <tr>
+                                <td>175</td>
+                                <td>Mike Doe</td>
+                                <td>11-7-2014</td>
+                                <td><span class="label label-danger">Denied</span></td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                            </tr>
+                            <tr>
+                                <td>175</td>
+                                <td>Mike Doe</td>
+                                <td>11-7-2014</td>
+                                <td><span class="label label-danger">Denied</span></td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                            </tr>
+                            <tr>
+                                <td>175</td>
+                                <td>Mike Doe</td>
+                                <td>11-7-2014</td>
+                                <td><span class="label label-danger">Denied</span></td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                            </tr>
+                            <tr>
+                                <td>175</td>
+                                <td>Mike Doe</td>
+                                <td>11-7-2014</td>
+                                <td><span class="label label-danger">Denied</span></td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                            </tr>
+                            <tr>
+                                <td>175</td>
+                                <td>Mike Doe</td>
+                                <td>11-7-2014</td>
+                                <td><span class="label label-danger">Denied</span></td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                            </tr>
+                            <tr>
+                                <td>175</td>
+                                <td>Mike Doe</td>
+                                <td>11-7-2014</td>
+                                <td><span class="label label-danger">Denied</span></td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                            </tr>
+                            <tr>
+                                <td>175</td>
+                                <td>Mike Doe</td>
+                                <td>11-7-2014</td>
+                                <td><span class="label label-danger">Denied</span></td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                            </tr>
+                            <tr>
+                                <td>175</td>
+                                <td>Mike Doe</td>
+                                <td>11-7-2014</td>
+                                <td><span class="label label-danger">Denied</span></td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                            </tr>
+                            <tr>
+                                <td>175</td>
+                                <td>Mike Doe</td>
+                                <td>11-7-2014</td>
+                                <td><span class="label label-danger">Denied</span></td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                            </tr>
+                            <tr>
+                                <td>175</td>
+                                <td>Mike Doe</td>
+                                <td>11-7-2014</td>
+                                <td><span class="label label-danger">Denied</span></td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                            </tr>
+                            <tr>
+                                <td>175</td>
+                                <td>Mike Doe</td>
+                                <td>11-7-2014</td>
+                                <td><span class="label label-danger">Denied</span></td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                            </tr>
+                            <tr>
+                                <td>175</td>
+                                <td>Mike Doe</td>
+                                <td>11-7-2014</td>
+                                <td><span class="label label-danger">Denied</span></td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                            </tr>
+                            <tr>
+                                <td>175</td>
+                                <td>Mike Doe</td>
+                                <td>11-7-2014</td>
+                                <td><span class="label label-danger">Denied</span></td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                            </tr>
+                            <tr>
+                                <td>175</td>
+                                <td>Mike Doe</td>
+                                <td>11-7-2014</td>
+                                <td><span class="label label-danger">Denied</span></td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                            </tr>
+                            <tr>
+                                <td>175</td>
+                                <td>Mike Doe</td>
+                                <td>11-7-2014</td>
+                                <td><span class="label label-danger">Denied</span></td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                            </tr>
+                            <tr>
+                                <td>175</td>
+                                <td>Mike Doe</td>
+                                <td>11-7-2014</td>
+                                <td><span class="label label-danger">Denied</span></td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                            </tr>
+
+                            <tr>
+                            <td>175</td>
+                            <td>Mike Doe</td>
+                            <td>11-7-2014</td>
+                            <td><span class="label label-danger">Denied</span></td>
+                            <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                        </tr>
+
+                            <tr>
+                                <td>175</td>
+                                <td>Mike Doe</td>
+                                <td>11-7-2014</td>
+                                <td><span class="label label-danger">Denied</span></td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                            </tr>
+
+                            <tr>
+                                <td>175</td>
+                                <td>Mike Doe</td>
+                                <td>11-7-2014</td>
+                                <td><span class="label label-danger">Denied</span></td>
+                                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                            </tr>
+
+
+                        </table>
+                    </div>
+
+
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+    <!--    </div>-->
+    <!--검색한 결과를 보여주는 밑의 테이블-->
+
+
+
+
+</th:block>
+</body>
+</html>

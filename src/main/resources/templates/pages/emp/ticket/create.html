@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorator="layouts/default">
+<head>
+<title>요청서 작성</title>
+
+<script th:inline="javascript">
+
+function readyAction() {
+	setHeaderTitle("요청서 작성", "fa fa-vcard-o");
+	$("#createTicketArea").load("/ticket/create.view");
+	$("#createTicketSpinner").hide();
+	$("#createTicketIcon").show();
+}
+
+</script>
+</head>
+<!-- Content Wrapper. Contains page content -->
+
+<!-- /* test */ -->
+
+
+<body onload="javascript:ready()">
+<th:block layout:fragment="content">
+    <!-- /.content-header -->
+ 
+	<div id="createTicketDiv" style="margin:20px;padding:10px;background-color: #FFFFFF;border-radius:10px;">
+		<div style="margin-left:30px;margin-bottom:10px;font-size:25px;"><div id="createTicketSpinner" class="fa fa-spinner fa-spin"></div><i id="createTicketIcon" style="display:none;" class="fa fa-plane"></i> 요청서 작성</div>
+		<section id="createTicketArea">
+		</section>
+	</div>
+</th:block>
+</body>
+</html>

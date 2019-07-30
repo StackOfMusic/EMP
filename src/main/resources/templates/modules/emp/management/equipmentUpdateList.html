@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<script>
+
+function ticket_detail_popup(el) {	
+	ticketId = $(el).children().eq(0).html();
+	var width = $(window).width()-300;	
+	var height = $(window).height()-100;
+	//load_popup("/ticket/ticketDetail", {"ticket_id": $(el).children().eq(0).html(), "width":width, "height":height}, width, height);
+}
+
+
+</script>
+</head>
+<body>
+
+	<div style="width:100%;padding-right:40px;">
+		<table class="table table-striped table-hover" style="margin-left :20px;margin-top:20px;" id="list_table">
+			<colgroup>
+				<!-- column 의 설정을 할수 있다. -->
+				<col style="width:20px;">
+				<col style="width:20px;">
+				<col style="width:20px;">
+				<col style="width:20px;">
+				<col style="width:20px;">
+				<col style="width:20px;">
+				<col style="width:20px;">
+				<col style="width:10px;">
+				<col style="width:10px;">
+			</colgroup>
+				<thead>
+				<tr>
+					<th>번호</th>
+					<th>팀명</th>
+					<th>카테고리</th>
+					<th>장비</th>
+					<th>UserID</th>
+					<th>담당자</th>
+					<th>핸드폰 번호</th>
+					<th>Action</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+			    <tr th:each="equipment : ${equipmentList}">
+					<td  th:text="${equipment.equipment_id}"></td>
+					<td  th:text="${equipment.category1}"></td>
+					<td  th:text="${equipment.category2}"></td>
+					<td  th:text="${equipment.category3}"></td>
+					<td  th:text="${equipment.bp_user_id}"></td>
+					<td  th:text="${equipment.bp_name}"></td>
+					<td  th:text="${equipment.bp_phone}"></td>
+					<td th:onclick='update_table(this);'>Update</td>
+					<td th:onclick='delete_table(this);'>Delete</td>
+			    </tr>
+    		</tbody>
+		</table>
+		<center>
+			<h4>추가 입력 테이블</h4>
+		</center>
+			
+	</div>
+</body>
+</html>

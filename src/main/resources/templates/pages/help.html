@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/default">
+<head>
+<title>도움말</title>
+<!-- content-css -->
+<style>
+p#sm { font-size : 90%; }
+</style>
+<!-- /content-css -->
+</head>
+<body onload="ready();">
+<!-- Content Wrapper. Contains page content -->
+<th:block class="content-wrapper" layout:fragment="content">
+    <section class="content-header">
+        <h3>
+           <i class="fa fa-exclamation-triangle"></i> TANGO 작업정보 조회 방법
+        </h3>
+    </section>
+    <!-- /.content-header -->
+    <section class="content">
+        	<pre>
+<i class="fa fa-circle-o"></i> 조회방법 : TANGO / 작업관리 / 작업목록 / 작업조회<br/>
+<i class="fa fa-circle-o"></i> 조회조건 :<br/>
+	- 도메인 : Core-주장비, Core-부가장비, 전송-Backhaul<br/>
+	- 기간 : 주간 단위(일요일 00시 ~ 토요일 23시 59분)<br/>
+	- 조회 후 "EXCEL(등록부서)" 다운로드</pre>
+    </section>
+     <section class="content-header">
+        <h3>
+           <i class="fa fa-exclamation-triangle"></i> BP 기술지원 현황 등록 가이드
+        </h3>
+    </section>
+    <!-- /.content-header -->
+    <section class="content">
+        	<pre>
+<i class="fa fa-circle-o"></i> 기술지원 유형 : TANGO(작업) 선택<br/>
+<i class="fa fa-circle-o"></i> 지원구분 : 구축지원 / 운용지원, 기술지원 대상장비가 워런티 기간 또는 신구장비(CapEx)인 경우 구축지원<br/>
+<i class="fa fa-circle-o"></i> TANGO 작업내역일 경우 BP지원 유/무에 표시<br/>
+<i class="fa fa-circle-o"></i> TANGO 작업내역일 경우 "점검유형" 항목에 TANGO 조회시 나오는 "점검유형" 표기</pre>
+    </section>
+    <!-- /.content -->
+</th:block>
+<!-- /.content-wrapper -->
+<!-- content-js -->
+<th:block layout:fragment="content-script">
+
+</th:block>
+<!-- /content-js -->
+</body>
+</html>

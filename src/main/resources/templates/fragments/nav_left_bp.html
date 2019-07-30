@@ -1,0 +1,109 @@
+
+<!-- Left side column. contains the sidebar -->
+<aside class="main-sidebar">
+    <!-- Logo -->
+    <div style="height:50px;">
+	    <a href="/" class="logo">
+	        <!-- mini logo for sidebar mini 50x50 pixels -->
+	        <span class="logo-mini text-bold">TP</span>
+	        <!-- logo for regular state and mobile devices -->
+	        <span style="font-size:22pt; font-weight:bold;">T-Partner</span>
+	    </a>
+    </div>
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+		
+        <!-- sidebar menu: : style can be found in sidebar.less -->
+        <ul class="sidebar-menu" data-widget="tree">
+			<li class="header">
+				<div id="nav-left-login-area" style="text-align: center;">
+					<div class="image">
+						<img src="/image/usericon.png" style="width: 130px; align: center;"
+							id="myimage" />
+					</div>
+					<div id="loginText2" th:text="${curUserName}"
+							style="margin: 10px; float: bottom; color: white; font-size: 15pt; font-weight: bold;">
+					</div>
+				</div>		
+			</li>
+            <li class="treeview" th:classappend="${#strings.indexOf(#httpServletRequest.requestURI, '/ticket/') >= 0} ? 'active' : ''">
+                <a href="#">
+                    <i class="fa fa-file-text"></i>
+                    <span>작업 지원</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li th:class="${#strings.indexOf(#httpServletRequest.requestURI, '/ticket/create') >= 0} ? 'active' : ''">
+                        <a href="/ticket/create" target="_self">
+                            <i class="fa fa-circle-o"></i>
+                            <span>접수내역 등록</span>
+                        </a>
+                    </li>
+                    <li th:class="${#strings.indexOf(#httpServletRequest.requestURI, '/ticket/summary') >= 0} ? 'active' : ''">
+                        <a href="/ticket/summary" target="_self">
+                            <i class="fa fa-circle-o"></i>
+                            <span>접수 진행 내역</span>
+                        </a>
+                    </li>
+                    <li th:class="${#strings.indexOf(#httpServletRequest.requestURI, '/ticket/retrieve') >= 0} ? 'active' : ''">
+                        <a href="/ticket/retrieve" target="_self">
+                            <i class="fa fa-circle-o"></i>
+                            <span>접수 내역 조회</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+           <li sec:authorize="hasAuthority('SKTUSER')" class="treeview" th:classappend="${#strings.indexOf(#httpServletRequest.requestURI, '/management/') >= 0} ? 'active' : ''">
+                <a href="#">
+                    <i class="fa fa-cog"></i>
+                    <span>관리</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li th:class="${#strings.indexOf(#httpServletRequest.requestURI, '/management/equipment') >= 0} ? 'active' : ''">
+                        <a href="/management/equipment" target="_self">
+                            <i class="fa fa-circle-o"></i>
+                            <span>장비군 관리</span>
+                        </a>
+                    </li>
+                    <li th:class="${#strings.indexOf(#httpServletRequest.requestURI, '/management/requestForm') >= 0} ? 'active' : ''">
+                        <a href="/management/requestForm" target="_self">
+                            <i class="fa fa-circle-o"></i>
+                            <span>지원요청양식 관리</span>
+                        </a>
+                    </li>   
+                    <li th:class="${#strings.indexOf(#httpServletRequest.requestURI, '/management/category') >= 0} ? 'active' : ''">
+                        <a href="/management/category" target="_self">
+                            <i class="fa fa-circle-o"></i>
+                            <span>카테고리 관리</span>
+                        </a>
+                    </li>   
+                </ul>
+            </li>
+            <li th:class="${#strings.indexOf(#httpServletRequest.requestURI, '/userinfo') >= 0} ? 'active' : ''">
+                <a href="/userinfo" target="_self">
+                    <i class="fa fa-address-card"></i>
+                    <span>내 정보</span>
+                </a>
+            </li>
+            <li th:class="${#strings.indexOf(#httpServletRequest.requestURI, '/question') >= 0} ? 'active' : ''">
+                <a href="/question" target="_self">
+                    <i class="fa fa-question-circle"></i>
+                    <span>문의</span>
+                </a>
+            </li>
+            <li th:class="${#strings.indexOf(#httpServletRequest.requestURI, '/help') >= 0} ? 'active' : ''">
+                <a href="/help" target="_self">
+                    <i class="fa fa-info-circle"></i>
+                    <span>도움말</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+
+    <!-- /.sidebar -->
+</aside>

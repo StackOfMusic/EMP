@@ -1,0 +1,355 @@
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<script>
+
+function delete_ticket() {
+	    if(confirm("정말 삭제하시겠습니까 ?") == true){
+			$.ajax({
+				type : "GET",
+				url : "/ticket/delete.do",
+				data : {
+					"ticket_id" : ticketId
+				},
+				async : true,
+				success : function(data, status, xhr) {			    	
+			    	alert("삭제되었습니다");
+			    	location.reload();
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					alert(jqXHR.responseText);
+				}
+			});
+	    	
+	    }
+	    else{
+	        return ;
+	    }
+}
+
+function submit_recv_ticket() {
+    if(confirm("지원 완료요청을 하시겠습니까 ?") == true){
+		$.ajax({
+			type : "GET",
+			url : "/ticket/submitTicket.do",
+			data : {
+				"ticket_id" : ticketId
+			},
+			async : true,
+			success : function(data, status, xhr) {			    	
+		    	alert("완료요청되었습니다");
+		    	$('#popup_area').load("/ticket/ticketDetail", {
+					"ticket_id" : ticketId
+				});
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				alert(jqXHR.responseText);
+			}
+		});
+    	
+    }
+    else{
+        return ;
+    }
+}
+
+function finish_recv_ticket() {
+    if(confirm("승인 완료 하시겠습니까 ? 완료후엔 수정이 불가능합니다.") == true){
+		$.ajax({
+			type : "GET",
+			url : "/ticket/finishTicket.do",
+			data : {
+				"ticket_id" : ticketId
+			},
+			async : true,
+			success : function(data, status, xhr) {			    	
+		    	alert("완료되었습니다");
+		    	location.reload();
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				alert(jqXHR.responseText);
+			}
+		});
+    	
+    }
+    else{
+        return ;
+    }
+}
+
+function accept_ticket() {
+    if(confirm("요청 접수 하시겠습니까 ?") == true){
+		$.ajax({
+			type : "GET",
+			url : "/ticket/acceptTicket.do",
+			data : {
+				"ticket_id" : ticketId
+			},
+			async : true,
+			success : function(data, status, xhr) {			    	
+		    	alert("접수되었습니다");
+		    	$('#popup_area').load("/ticket/ticketDetail", {
+					"ticket_id" : ticketId
+				});
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				alert(jqXHR.responseText);
+			}
+		});
+    	
+    }
+    else{
+        return ;
+    }	
+}
+
+function edit_ticket() {
+	$("#location").prop("readonly", false);
+	$("#target").prop("readonly", false);
+	$("#content").prop("readonly", false);
+	$("#edit_req_ticket_btn").hide();
+	$("#delete_req_ticket_btn").hide();	
+	$("#save_req_ticket_btn").show();
+	$("#cancel_req_ticket_btn").show();
+}
+
+function cancel_ticket() {
+	$('#popup_area').load("/ticket/ticketDetail", {"ticket_id":ticketId});	
+}
+
+function update_ticket() {
+    if(confirm("정말 저장하시겠습니까 ?") == true){
+		$.ajax({
+			type : "GET",
+			url : "/ticket/update.do",
+			data : {
+				"reqTicketData" : $("#reqTicketForm").serialize(),
+				"recvTicketData" :  $("#recvTicketForm").serialize()
+			},
+			async : true,
+			success : function(data, status, xhr) {			    	
+		    	alert("삭제되었습니다");
+		    	location.reload();
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				alert(jqXHR.responseText);
+			}
+		});
+    	
+    }
+    else{
+        return ;
+    }	
+}
+
+
+</script>
+		<div style="margin-left:30px;margin-bottom:10px;font-size:25px;"><div id="ticketDetailSpinner" class="fa fa-spinner fa-spin" style="display:none;"></div><i id="ticketDetailIcon" class="fa fa-plane"></i> 요청 내역</div>
+
+        <div class="box box-primary">
+            <div class="box-header with-border" style="display:none">
+              <h3 class="box-title">요청 내역</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+
+            <form id="reqTicketForm" class="form-horizontal">
+              <div class="box-body">
+<!------------------------------------------------------------------------------>
+
+                <div class="form-group">
+                  <label for="reqTime" class="col-sm-1 control-label">요청 일시</label>
+                  <div class="col-sm-11">
+                  <input th:value="${ticketData.ticket_time}" name="reqTime" id="reqTime" type="text" class="form-control" placeholder="" readonly>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="reqUser" class="col-sm-1 control-label">요청자</label>
+                  <div class="col-sm-11">
+                  <input th:value="${loginUser.name+'('+loginUser.mobile+')'}" name="reqUser" id="requestUser" type="text" class="form-control" placeholder="" readonly>
+                  <input th:value="${loginUser.id}" name="reqUserId" id="requestUserId" type="hidden">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="location" class="col-sm-1 control-label">지역</label>
+                  <div class="col-sm-11">
+                  <input th:value="${ticketData.equipment_loc}" name="location" id="location" type="text" class="form-control" placeholder="" readonly>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="target" class="col-sm-1 control-label">국소</label>
+                  <div class="col-sm-11">
+                  <input th:value="${ticketData.ticket_subject}" name="target" id="target" type="text" class="form-control" placeholder="" readonly>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="recvUser" class="col-sm-1 control-label">접수자</label>
+                  <div class="col-sm-11">
+                  <input th:value="${ticketData.exe_user_name+'('+ticketData.exe_user_team+')'}" name="recvUser" id="recvUser" type="text" class="form-control" placeholder="" readonly>
+	              <input name="recvUserId" id="recvUserId" type="hidden">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="equip" class="col-sm-1 control-label">장비군</label>
+                  <div class="col-sm-11">
+	              <input th:value="${ticketData.category1+' > '+ticketData.category2+' > '+ticketData.category3}" name="equip" id="equip" type="text" class="form-control" placeholder="" readonly>
+	              <input name="equipId" id="equipId" type="hidden">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="equip" class="col-sm-1 control-label">진행 내역</label>
+	              <div class="col-sm-11">
+	                <div class="input-group-btn">
+	                	<input id="progress" type="hidden" th:value="${ticketData.progress}">
+	                  <button th:if="${ticketData.progress == 1}" type="button" class="btn btn-info pull-left">요청</button>
+	                  <button th:if="${ticketData.progress == 2}" type="button" class="btn btn-primary pull-left">진행중</button>
+	                  <button th:if="${ticketData.progress == 3}" type="button" class="btn btn-warning pull-left">진행완료</button>
+	                  <button th:if="${ticketData.progress == 4}" type="button" class="btn btn-success pull-left">승인완요</button>
+	                </div>
+	                <!-- /btn-group -->
+              	  </div>
+				</div>
+
+                <div class="form-group">
+                  <label for="content" class="col-sm-1 control-label">요청 내용</label>
+                  <div class="col-sm-11">
+                  <textarea th:text="${ticketData.ticket_content}" name="content" id="content" class="form-control" rows="10" placeholder="" readonly></textarea>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="fileAppend" class="col-sm-1 control-label">파일 첨부</label>
+                  <div class="col-sm-11">
+                  <input name="fileAppend" id="fileAppend" type="file" multiple="multiple" class="form-control" placeholder="">
+                  <textarea id="fileAppendTextArea" class="form-control" readonly style="display:none"></textarea>
+                  </div>
+                </div>
+
+<!--                                 -->
+
+
+              </div>   
+<th:block th:if="${ticketData.progress == 1}">
+
+              <!-- /.box-body -->
+   			  <div class="col-sm-offset-1 box-footer">
+   			  
+   			  <th:block th:if="${loginUser.id == ticketData.req_user_id}">
+   			  <!-- 요청자 동일/요청단계일 때. 수정/삭제 버튼 활성화 -->
+                <button id="edit_req_ticket_btn" type="button" class="btn btn-warning pull-left" onclick="edit_ticket();">수정</button>
+                <button id="save_req_ticket_btn" type="button" class="btn btn-success pull-left" onclick="update_ticket();" style="display:none;">저장</button>
+                <button id="cancel_req_ticket_btn" type="button" class="btn btn-gray pull-left" onclick="cancel_ticket();" style="display:none;">취소</button>
+                <button id="delete_req_ticket_btn" type="button" class="btn btn-danger pull-left" onclick="delete_ticket();">삭제</button>
+   			  
+   			  </th:block>
+   			  <th:block th:if="${loginUser.id == ticketData.exe_user_id}">
+   			  <!-- 요청자 동일/요청단계일 때. 수정/삭제 버튼 활성화 -->
+                <button type="button" class="btn btn-primary pull-left" onclick="accept_ticket();">접수</button>
+   			  </th:block>
+
+              </div>
+              <!-- /.box-footer -->
+</th:block>
+
+            </form>
+          </div>
+<th:block th:if="${ticketData.progress != 1}">
+		<div style="margin-left:30px;margin-bottom:10px;font-size:25px;"><div id="recvTicketDetailRecvSpinner" class="fa fa-spinner fa-spin" style="display:none;"></div><i id="recvTicketDetailIcon" class="fa fa-plane"></i> 지원 내역</div>
+
+        <div class="box box-primary">
+            <div class="box-header with-border pull-left" style="display:none;">
+              <h3 class="box-title">지원 내역</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form id="recvTicketDetailForm" class="form-horizontal">
+              <div class="box-body">
+<!------------------------------------------------------------------------------>
+
+                <div class="form-group">
+                  <label for="reqTime" class="col-sm-1 control-label">접수 일시</label>
+                  <div class="col-sm-11">
+                  <input th:value="${ticketData.ticket_time}" name="recvTime" id="recvTime" type="text" class="form-control" placeholder="" readonly>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="recvUser" class="col-sm-1 control-label">접수자</label>
+                  <div class="col-sm-11">
+                  <input th:value="${ticketData.exe_user_name+'('+ticketData.exe_user_team+')'}" name="recvUser" id="recvUser" type="text" class="form-control" placeholder="" readonly>
+	              <input name="recvUserId" id="recvUserId" type="hidden">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="equip" class="col-sm-1 control-label">장비군</label>
+                  <div class="col-sm-11">
+	              <input th:value="${ticketData.category1+' > '+ticketData.category2+' > '+ticketData.category3}" name="equip" id="equip" type="text" class="form-control" placeholder="" readonly>
+	              <input name="equipId" id="equipId" type="hidden">
+                  </div>
+                </div>
+
+
+
+                <div class="form-group">
+                  <label for="content" class="col-sm-1 control-label">요청 내용</label>
+                  <div class="col-sm-11">
+                  <textarea th:text="${ticketData.ticket_content}" name="content" id="content" class="form-control" rows="10" placeholder="" readonly></textarea>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="fileAppend" class="col-sm-1 control-label">파일 첨부</label>
+                  <div class="col-sm-11">
+                  <input name="fileAppend" id="fileAppend" type="file" multiple="multiple" class="form-control" placeholder="">
+                  <textarea id="fileAppendTextArea" class="form-control" readonly style="display:none"></textarea>
+                  </div>
+                </div>
+
+<!--                                 -->
+              </div>   
+
+              <!-- /.box-body -->
+   			  <div class="col-sm-offset-1 box-footer">
+
+   			  <th:block th:if="${loginUser.id == ticketData.exe_user_id && ticketData.progress == 2}">
+   			  <!-- 요청자 동일/요청단계일 때. 수정/삭제 버튼 활성화 -->
+                <button id="save_recv_ticket_btn" type="button" class="btn btn-success pull-left">저장</button>
+                <button id="submit_recv_ticket_btn" type="button" class="btn btn-primary pull-left" onclick="submit_recv_ticket();">승인요청</button>
+   			  </th:block>
+
+   			  <th:block th:if="${loginUser.id == ticketData.exe_user_id && ticketData.progress == 3}">
+   			  <!-- 요청자 동일/요청단계일 때. 수정/삭제 버튼 활성화 -->
+                <button id="edit_recv_ticket_btn" type="button" class="btn btn-warning pull-left">수정</button>
+                <button id="save_recv_ticket_btn" type="button" class="btn btn-warning pull-left" style="display:none;">저장</button>
+                <button id="cancel_recv_ticket_btn" type="button" class="btn btn-warning pull-left" style="display:none;">취소</button>
+   			  </th:block>
+	
+   			  <th:block th:if="${loginUser.id == ticketData.req_user_id && ticketData.progress == 3}">
+   			  <!-- 요청자 동일/요청단계일 때. 수정/삭제 버튼 활성화 -->
+                <button id="finish_recv_ticket_btn" type="button" class="btn btn-success pull-left" onclick="finish_recv_ticket();">승인완료</button>
+   			  
+   			  </th:block>
+	
+
+              </div>
+              <!-- /.box-footer -->
+            </form>
+          </div>
+
+
+	<div id="replyArea">
+	</div>
+	<script>
+	$("#replyArea").load("/ticket/replyList", {"ticket_id":ticketId});
+	$("recvTicketForm").ready(function() {
+		
+	});
+
+	</script>
+</th:block>

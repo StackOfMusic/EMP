@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/default">
+<head>
+<title>작업시간 통계</title>
+<script>
+var date = new Date();
+var chartObj = null;
+var chartType; 
+$(document).ready(function() {
+	$("#headerTitleText").text("작업시간 통계");
+	$("#start_date").val(date.getFullYear()+"-"+(("0"+(date.getMonth() + 1)).slice(-2))+"-"+date.getDate());
+	$("#end_date").val(date.getFullYear()+"-"+(("0"+(date.getMonth() + 1)).slice(-2))+"-"+date.getDate());
+	
+	$("#wholeMonth").click(function(){	
+		$("#chart").load("/statistics/barChart",{title:"전체월별 작업시간",
+												 location:"chart",
+												 url:"/statistics/countMonthlyWorkingTime",
+												 series_names:"BP,SKT"
+												 })	 
+	});
+	
+	$("#last12month").click(function(){
+		$("#chart").load("/statistics/barChart",{title:"지난 12개월 작업시간",
+												 location:"chart",
+												 url:"/statistics/countRecentTwelveMonthlyWorkingTime",
+												 series_names:"BP,SKT"
+												 })	 
+	});
+	
+	$("#last24month").click(function(){
+		$("#chart").load("/statistics/barChart",{title:"지난 24개월 작업시간",
+												 location:"chart",
+												 url:"/statistics/countRecentTwentyfourMonthlyWorkingTime",
+												 series_names:"BP,SKT"
+												 })	 
+	});
+	
+	$("#wholeYear").click(function(){
+		$("#chart").load("/statistics/barChart",{title:"연도별 작업시간",
+												 location:"chart",
+												 url:"/statistics/countYearlyWorkingTime",
+												 series_names:"BP,SKT"
+												 })	 
+	});
+	
+	$("#dateRange").click(function(){
+		
+	});
+});
+</script>
+</head>
+<!-- Content Wrapper. Contains page content -->
+
+<!-- /* test */ -->
+
+<body onload="javascript:ready()">
+<th:block layout:fragment="content">
+    <!-- /.content-header -->
+
+
+    <!-- Main content -->
+    <section class="content" style="width:100%;min-height:150px">
+
+      <!-- SELECT2 EXAMPLE -->
+      <div class="box box-default" style="width:100%">
+        <div class="box-header with-border">
+          <h3 class="box-title">통계 출력</h3>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+          <div class="row"> 
+          		<div class="col-md-1">
+          			<div style="float:right">월별:</div>
+          		</div>
+          	    <div class="col-md-1">
+         		    <button id="wholeMonth" type="button" class="btn btn-block btn-primary btn-sm" style="width:100px">전체월별 </button>
+          	    </div>
+	            <div class="col-md-1">
+	         	    <button id="last12month" type="button" class="btn btn-block btn-primary btn-sm" style="width:100px">지난 12개월</button>
+	            </div>
+	            <div class="col-md-1">
+	        	    <button id="last24month" type="button" class="btn btn-block btn-primary btn-sm" style="width:100px">지난 24개월</button>
+	            </div>
+	            <div class="col-md-1">
+          			<div style="float:right">연도별:</div>
+          		</div>
+	            <div class="col-md-1">
+	        	     <button id="wholeYear" type="button" class="btn btn-block btn-primary btn-sm" style="width:100px">연도별</button>
+	            </div>
+	            <div class="col-md-1">
+	          	  <div style="float:right">기간별:</div>
+	            </div>
+	            <div class="col-md-5">
+	              <div>
+           			<input type="date" id="start_date" style="width:200px" >~
+           			<input type="date" id="end_date" style="width:200px">
+           			<button id="dateRange" type="button" class="btn btn-block btn-primary btn-sm" style="width:100px;float:right">기간별 통계출력</button>
+	        	  </div>
+	            </div>
+           </div>
+          </div>
+          <!-- /.row -->
+        </div>
+      <!-- /.box -->
+    </section>
+    <!-- /.content -->
+	<div id="chart" style="width:65%;height:100%;margin:auto">
+	</div>
+</th:block>
+</body>
+</html>

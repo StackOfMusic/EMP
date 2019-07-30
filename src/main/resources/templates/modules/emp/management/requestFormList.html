@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      
+<script>
+
+function ticket_detail_popup(el) {	
+	ticketId = $(el).children().eq(0).html();
+	var width = $(window).width()-300;	
+	var height = $(window).height()-100;
+	//load_popup("/ticket/ticketDetail", {"ticket_id": $(el).children().eq(0).html(), "width":width, "height":height}, width, height);
+}
+
+</script>
+
+<body>
+
+	<div style="width:100%;padding-right:40px;">
+		<table class="table table-striped table-hover" style="margin-left :20px;margin-top:20px;">
+	    <thead>
+	    <tr>
+		    <th style="width:200px;text-align:center;">번호</th>
+			<th >요청자</th>
+			<th >제목</th>
+			<th style="display:none">파일경로</th>
+	    	<th style="display:none">meta_data</th>
+	    </tr>
+	    </thead>
+	    <tbody>
+	    <tr th:each="requestForm : ${requestFormList}" th:onclick="'javascript:ticket_detail_popup(this);'">
+			<td  th:text="${requestForm.doc_id}"></td>
+			<td  th:text="${requestForm.id}"></td>
+			<td  th:text="${requestForm.subject}"></td>
+			<td  style="display:none" th:text="${requestForm.file_name}"></td>
+			<td  style="display:none" th:text="${requestForm.meta_data}"></td>
+	    </tr>
+	    </tbody>
+		</table>
+	</div>
+		
+</body>
+</html>

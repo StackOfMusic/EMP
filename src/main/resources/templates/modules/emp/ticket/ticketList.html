@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<script>
+	function ticket_detail_popup(el) {
+		ticketId = $(el).children().eq(0).html();
+		var width = $(window).width() - 300;
+		var height = $(window).height() - 100;
+		load_popup("/ticket/ticketDetail", {
+			"ticket_id" : $(el).children().eq(0).html(),
+			"width" : width,
+			"height" : height
+		});
+	}
+</script>
+
+<body>
+	<section class="content">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="card">
+					<div class="card-body">
+						<div style="width: 100%; padding-right: 40px;">
+							<table class="table table-striped dataTable"
+								style="margin-left: 20px; margin-top: 20px;">
+								<thead>
+									<tr>
+										<th style="display: none">ticket_id</th>
+										<th style="width: 200px; text-align: center;">요청일시</th>
+										<th>요청팀</th>
+										<th>요청자</th>
+										<th>시스템명</th>
+										<th>시스템위치</th>
+										<th>내용</th>
+										<th>접수팀</th>
+										<th>접수자</th>
+										<th>진행단계</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="ticket : ${ticketList}"
+										th:onclick="'javascript:ticket_detail_popup(this);'">
+										<td style="display: none" th:text="${ticket.ticket_id}"></td>
+										<td th:text="${ticket.ticket_time}"></td>
+										<td th:text="${ticket.req_user_team}"></td>
+										<td th:text="${ticket.req_user_name}"></td>
+										<td th:text="${ticket.category3}"></td>
+										<td th:text="${ticket.equipment_loc}"></td>
+										<td th:text="${ticket.ticket_content.length() > 21 ? ticket.ticket_content.substring(0,20)+'...' : ticket.ticket_content}"></td>
+										<td th:text="${ticket.exe_user_team}"></td>
+										<td th:text="${ticket.exe_user_name}"></td>
+										<td th:if="${ticket.progress} == 1"><span
+											class="label label-info">요청</span></td>
+										<td th:if="${ticket.progress} == 2"><span
+											class="label label-primary">진행중</span></td>
+										<td th:if="${ticket.progress} == 3"><span
+											class="label label-warning">진행완료</span></td>
+										<td th:if="${ticket.progress} == 4"><span
+											class="label label-success">승인완료</span></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			 <div class="box-footer clearfix">
+              <ul class="pagination pagination-sm no-margin pull-right">
+              <th:block th:if="${pageMaker != null}">
+              <li th:if="${pageMaker.prev} == true">
+              	<a th:href="@{/ticket/ticketList(page=${pageMaker.startPage}-1,perPageNum=${pageMaker.cri.perPageNum})}">&laquo;</a>
+              </li>
+              
+              <li th:each="idx,iterStat : ${#numbers.sequence(pageMaker.startPage,pageMaker.endPage)}"  th:classappend="${pageMaker.cri.page} == ${idx} ? active : null">
+                <a th:href="@{/ticket/ticketList(page=${idx},perPageNum=${pageMaker.cri.perPageNum})}" th:text="${idx}"></a>
+              </li>
+                
+              <li th:if="${pageMaker.next} == true and ${pageMaker.endPage > 0}">
+              	<a th:href="@{/ticket/ticketList(page=${pageMaker.endPage}+1,perPageNum=${pageMaker.cri.perPageNum})}">&raquo;</a>
+              </li>
+              </th:block>
+              </ul>
+              
+            </div>
+		</div>
+	</section>
+</body>
+</html>

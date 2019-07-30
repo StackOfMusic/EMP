@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<H1>장비세부내역</H1>
+<script>
+	function delete_table2(el) {
+		$.ajax({
+			type : "GET",
+			url : "/management/delete_table.do",
+			data : {
+				"equipment_id" : $(el).parent().eq(0).children().html()
+			},
+			async : true,
+			success : function(data, status, xhr) {
+				searchTicket();
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				alert(jqXHR.responseText);
+			}
+		});
+		
+		searchTicket();
+		
+	}
+
+	function update_table2(el) {
+		//alert($(el).parent().eq(0).children().html());
+		//alert($(el).parent().find('td').eq(1).html());
+
+		//$(el).parents().find('td').eq(0).contents().wrap( '<input id="add_equipment_id" th:text="${equipmentData.equipment_id}"></input>' );
+		$(el).parents().find('td').eq(1).contents().wrap( '<input style="height:30px;width:100px;padding:5px 0px 0px 10px;" id="add_category1"></input>' );
+		$(el).parents().find('td').eq(2).contents().wrap( '<input style="height:30px;width:100px;padding:5px 0px 0px 10px;" id="add_category2"></input>' );
+		$(el).parents().find('td').eq(3).contents().wrap( '<input style="height:30px;width:100px;padding:5px 0px 0px 10px;" id="add_category3"></input>' );
+		$(el).parents().find('td').eq(4).contents().wrap( '<input style="height:30px;width:100px;padding:5px 0px 0px 10px;" id="add_bp_user_id"></input>' );
+		//$('#add_equipment_id').val($(el).parent().find('td').eq(0).html());
+		$(el).parents().find('th').eq(5).contents().unwrap().wrap('<th style="display:none;;"></th>');
+		$(el).parents().find('th').eq(6).contents().unwrap().wrap('<th style="display:none;"></th>');
+		$(el).parents().find('td').eq(5).contents().unwrap().wrap('<td style="display:none;"></td>');
+		$(el).parents().find('td').eq(6).contents().unwrap().wrap('<td style="display:none;"></td>');
+		$('#add_category1').val($(el).parent().find('input').eq(0).html());
+		$('#add_category2').val($(el).parent().find('input').eq(1).html());
+		$('#add_category3').val($(el).parent().find('input').eq(2).html());
+		$('#add_bp_user_id').val($(el).parent().find('input').eq(3).html());
+		
+		
+	}
+
+	
+	 
+</script>
+<div style="width: 100%; padding-right: 40px;">
+	<table class="table table-striped table-hover"
+		style="margin-left: 20px; margin-top: 20px;" id="list_table">
+		<colgroup>
+			<!-- column 의 설정을 할수 있다. -->
+			<col style="width: 20px;">
+			<col style="width: 20px;">
+			<col style="width: 20px;">
+			<col style="width: 20px;">
+			<col style="width: 20px;">
+			<col style="width: 20px;">
+			<col style="width: 20px;">
+			<col style="width: 10px;">
+			<col style="width: 10px;">
+		</colgroup>
+		<thead>
+			<tr>
+				<th>번호</t>
+				<th>팀명</th>
+				<th>카테고리</th>
+				<th>장비</th>
+				<th>UserID</th>
+				<th>담당자</th>
+				<th>핸드폰 번호</th>
+				<th>Action</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td id="aadd_equipment_id" th:text="${equipmentData.equipment_id}"></td>
+				<td id="aadd_category1" th:text="${equipmentData.category1}"></td>
+				<td id="aadd_category2" th:text="${equipmentData.category2}"></td>
+				<td id="aadd_category3" th:text="${equipmentData.category3}"></td>
+				<td id="aadd_bp_user_id" th:text="${equipmentData.bp_user_id}"></td>
+				<td th:text="${equipmentData.bp_name}"></td>
+				<td th:text="${equipmentData.bp_phone}"></td>
+				<td th:onclick='update_table2(this);'>Update</td>
+				<td th:onclick='delete_table2(this);'>Delete</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<center>
+		<button style="float:right" type="button" onclick="issuingAction();">insert</button>
+	</center>
+	
+
+</div>
+</html>

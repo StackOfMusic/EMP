@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<H1>장비세부내역</H1>
+<script>
+	function team_delete_table2(el) {
+		$.ajax({
+			type : "GET",
+			url : "/management/team_delete_table.do",
+			data : {
+				"team_id" : $(el).parent().eq(0).children().html()
+			},
+			async : true,
+			success : function(data, status, xhr) {
+				searchTeam();
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				alert(jqXHR.responseText);
+			}
+		});
+		searchTeam();
+	}
+
+	function team_update_table2(el) {
+		//alert($(el).parent().eq(0).children().html());
+		//alert($(el).parent().find('td').eq(1).html());
+		//$(el).parents().find('td').eq(0).contents().wrap( '<input id="add_equipment_id" th:text="${equipmentData.equipment_id}"></input>' );
+		$(el).parents().find('td').eq(1).contents().wrap( '<input style="height:30px;width:100px;padding:5px 0px 0px 10px;" id="add_type"></input>' );
+		$(el).parents().find('td').eq(2).contents().wrap( '<input style="height:30px;width:100px;padding:5px 0px 0px 10px;" id="add_category1"></input>' );
+		$(el).parents().find('td').eq(3).contents().wrap( '<input style="height:30px;width:100px;padding:5px 0px 0px 10px;" id="add_category2"></input>' );
+		$(el).parents().find('td').eq(4).contents().wrap( '<input style="height:30px;width:100px;padding:5px 0px 0px 10px;" id="add_mail"></input>' );
+		//$('#add_equipment_id').val($(el).parent().find('td').eq(0).html());
+		$('#add_type').val($(el).parent().find('input').eq(0).html());
+		$('#add_category1').val($(el).parent().find('input').eq(1).html());
+		$('#add_category2').val($(el).parent().find('input').eq(2).html());
+		$('#add_mail').val($(el).parent().find('input').eq(3).html());
+		
+		
+	}
+
+	
+	 
+</script>
+<div style="width: 100%; padding-right: 40px;">
+	<table class="table table-striped table-hover"
+		style="margin-left: 20px; margin-top: 20px;" id="list_table">
+		<colgroup>
+			<!-- column 의 설정을 할수 있다. -->
+			<col style="width: 20px;">
+			<col style="width: 20px;">
+			<col style="width: 20px;">
+			<col style="width: 20px;">
+			<col style="width: 20px;">
+			<col style="width: 20px;">
+			<col style="width: 20px;">
+		</colgroup>
+		<thead>
+			<tr>
+				<th>번호</t>
+				<th>구분</th>
+				<th>사업부</th>
+				<th>팀명</th>
+				<th>Mail</th>
+				<th>Action</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td id="aadd_team_id" th:text="${teamData.team_id}"></td>
+				<td id="aadd_type" th:text="${teamData.type}"></td>
+				<td id="aadd_category1" th:text="${teamData.category1}"></td>
+				<td id="aadd_category2" th:text="${teamData.category2}"></td>
+				<td id="aadd_mail" th:text="${teamData.mail}"></td>
+				<td th:onclick='team_update_table2(this);'>Update</td>
+				<td th:onclick='team_delete_table2(this);'>Delete</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<center>
+		<button style="float:right" type="button" onclick="team_issuingAction();">insert</button>
+	</center>
+	
+
+</div>
+</html>

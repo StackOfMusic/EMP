@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<script>
+
+/*
+ function select_list(data) {
+	this.select_nodes = [];
+	this.value = data;
+	this.id = 0;
+	this.manager_name = "";
+	this.manager_phone = "";
+	this.pos = 0;
+	this.listSize = 0;
+} 
+ */
+
+	function load_popup_equipmentSelect() {
+		var data = {
+			"equipmentID" : "equipId",
+			"equipValue" : "equip",
+			"equipManagerValue" : "recvUser"
+		};
+		load_popup("/ticket/equipmentSelect", data, 700, 300);
+	}
+
+	function equipSelect(target) {
+		//EquipmentSelect에서 마지막 옵션 선택했을 때 담당자명, 폰번호 전달 함수
+		if (target == null) {
+			$("#equipId").val(null);
+			$("#recvUserId").val(null);
+			$("#equip").val("");
+			$("#recvUser").val("");
+		} else {
+			$("#equipId").val(target.id);
+			$("#recvUserId").val(target.manager_id);			
+			$("#recvUser").val(target.manager_name + '(' + target.manager_phone + ')');
+		}
+	}
+
+	$("#createTicketForm").bind("submit", function() {
+		//$fancybox.showActivity();
+		
+		if(checkForm() != null) {
+			$.ajax({
+				type	: "POST",
+				
+				url		: "/ticket/issuing.do",
+				data	: $(this).serialize(),
+				success	: function(data) {
+					alert("등록 완료되었습니다.");
+					location.reload();
+				},
+		        complete : function(data) {
+		            // 통신이 실패했어도 완료가 되었을 때 이 함수를 타게 된다.
+		            // TODO
+		              alert('통신완료 data : ' + data.status);
+			    },
+		        error:function(request,status,error){
+		          alert("code:  "+request.status+"\n"+"message:  "+request.responseText+"\n"+"error:  "+error);
+		        }	
+			});
+		} else {
+			alert("값을 제대로 입력해주세요")
+			return false;
+		}
+	});
+	
+	function checkForm() {
+		if($("#equipId").val() == null || $("#recvUserId").val() == null) {
+			return null;
+		}
+		return "";
+	}
+</script>
+<!-- 
+*Default Form(col size는 총 12를 두고 배분한다. 기본은 제목1, 내용11)
+                <div class="form-group">
+                  <label for="reqeustUser" class="col-sm-1 control-label">항목</label>
+                  <div class="col-sm-11">
+                  <input id="requestUser" type="text" class="form-control" placeholder="항목..">
+                  </div>
+                </div>
+
+*2Part Form(제목1, 내용5, 제목1, 내용5)
+                <div class="form-group">
+                  <label for="nameSpace1" class="col-sm-1 control-label">항목</label>
+                  <div class="col-sm-5">
+                  <input id="nameSpace1" type="text" class="form-control" placeholder="항목..">
+                  </div>
+                  <label for="nameSpace2" class="col-sm-1 control-label">항목2</label>
+                  <div class="col-sm-5">
+                  <input id="nameSpace2" type="text" class="form-control" placeholder="항목2..">
+                  </div>
+                </div>
+
+*3Part Form(제목1, 내용3, 제목1, 내용3, 제목1, 내용3)
+                <div class="form-group">
+                  <label for="nameSpace1" class="col-sm-1 control-label">항목</label>
+                  <div class="col-sm-3">
+                  <input id="nameSpace1" type="text" class="form-control" placeholder="항목..">
+                  </div>
+                  <label for="nameSpace2" class="col-sm-1 control-label">항목2</label>
+                  <div class="col-sm-3">
+                  <input id="nameSpace2" type="text" class="form-control" placeholder="항목2..">
+                  </div>
+                  <label for="nameSpace3" class="col-sm-1 control-label">항목3</label>
+                  <div class="col-sm-3">
+                  <input id="nameSpace3" type="text" class="form-control" placeholder="항목3..">
+                  </div>
+                </div>
+
+*small 2Part Form(제목1, 내용3, 제목1, 내용3. 뒤 4칸은 공란)
+                <div class="form-group">
+                  <label for="nameSpace1" class="col-sm-1 control-label">항목</label>
+                  <div class="col-sm-3">
+                  <input id="nameSpace1" type="text" class="form-control" placeholder="항목..">
+                  </div>
+                  <label for="nameSpace2" class="col-sm-1 control-label">항목2</label>
+                  <div class="col-sm-3">
+                  <input id="nameSpace2" type="text" class="form-control" placeholder="항목2..">
+                  </div>
+                </div>
+
+
+
+
+
+
+
+
+
+ -->          
+
+        <div class="box box-warning">
+            <div class="box-header with-border" style="display:none;">
+              <h3 class="box-title">요청서 작성 페이지</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form id="createTicketForm" class="form-horizontal" autocomplete="off">
+              <div class="box-body">
+<!------------------------------------------------------------------------------>
+
+                <div class="form-group" style="display:none;">
+                  <label for="reqUser" class="col-sm-1 control-label">요청자</label>
+                  <div class="col-sm-3">
+                  <input th:value="${loginUser.name+'('+loginUser.mobile+')'}" name="reqUser" id="requestUser" type="text" class="form-control" placeholder="입력하세요.." readonly>
+                  <input th:value="${loginUser.id}" name="reqUserId" id="requestUserId" type="hidden">
+                  </div>
+                </div>
+
+                <div class="form-group" style="display:none;">
+                  <label for="location" class="col-sm-1 control-label">지역</label>
+                  <div class="col-sm-3">
+                  <input name="location" id="location" type="text" class="form-control" placeholder="입력하세요..">
+                  </div>
+                  <label for="target" class="col-sm-1 control-label">국소</label>
+                  <div class="col-sm-3">
+                  <input name="target" id="target" type="text" class="form-control" placeholder="입력하세요..">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="equip" class="col-sm-1 control-label">장비군</label>
+                  <div class="col-sm-2">
+	              <div class="input-group">
+	                <span class="input-group-addon"><i class="fa fa-search" onclick="load_popup_equipmentSelect();"></i></span>
+	                <input name="equip" id="equip" type="text" class="form-control" placeholder="선택 장비군 없음" onclick="load_popup_equipmentSelect();">
+	                <input name="equipId" id="equipId" type="hidden">
+	              </div>
+                  </div>
+                  <div class="col-sm-3">
+	              <div class="input-group">
+	                <input name="recvUser" id="recvUser" type="text" class="form-control" placeholder="" readonly>
+	                <input name="recvUserId" id="recvUserId" type="hidden">
+	              </div>
+                  </div>
+                  <div class="col-sm-offset-1 col-sm-1">
+                    <div class="checkbox">
+                      <label>
+                        <input name="mailCheck" id="mailCheck" type="checkbox" checked> Mail
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-sm-1">
+                    <div class="checkbox">
+                      <label>
+                        <input name="smsCheck" id="smsCheck" type="checkbox" checked> SMS
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-3">
+                  <input name="fileAppend" id="fileAppend" type="file" multiple="multiple" class="form-control" placeholder="항목3..">
+                  <textarea id="fileAppendTextArea" class="form-control" readonly style="display:none"></textarea>
+                  </div>
+                </div>
+
+
+
+                <div class="form-group">
+                  <label for="content" class="col-sm-1 control-label">요청 내용</label>
+                  <div class="col-sm-11">
+                  <textarea name="content" id="content" class="form-control" rows="5" placeholder="내용을 입력하세요 ..."></textarea>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <div class="col-sm-offset-1 col-sm-11">
+	                <button type="submit" class="btn btn-primary pull-left">등록</button>
+                  </div>
+                </div>
+
+
+<!--                                 -->
+
+
+              </div>   
+              
+
+              <!-- /.box-body -->
+              <!-- 
+   			  <div class="box-footer col-sm-offset-1">
+              </div>
+               -->
+              <!-- /.box-footer -->
+            </form>
+          </div>

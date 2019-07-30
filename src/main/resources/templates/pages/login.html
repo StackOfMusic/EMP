@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorator="layouts/full-width">
+      
+<head>
+<title>로그인</title>
+    <style>
+        img { display: block; margin: 0px auto; }
+        body,html{
+            margin:0;
+            padding:0;
+            height: 100%;
+        }
+
+    </style>
+<!-- content-css -->
+<script>
+$(document).ready(function() {
+	if(window.location.href.includes('/login') == false) {
+		window.location.href = 'http://localhost:8080/login';
+	} else {
+		$("#loginBox").css("display", "");
+	}
+});
+</script>
+
+<!-- /content-css -->
+</head>
+<body class="hold-transition login-page">
+
+<!--<div id="bg">-->
+<!--    <img src="https://wallpaperaccess.com/full/250581.jpg" alt="">-->
+<!--</div>-->
+<div class="wrapper" layout:fragment="wrapper">
+    <div  id="loginBox" class="login-box">
+        <div class="login-logo">
+<!--            <h1 class="text-bold">비피더스</h1>-->
+            <img src="/image/newTpartnerslogo.png" height="300px" width="300px"/>
+        <!-- /.login-logo -->
+        <div class="login-box-body">
+            <p class="login-box-msg" style="font-size:large">아이디와 패스워드를<br>기입하여 로그인해주세요.</p>
+            <div class="alert alert-danger alert-dismissible" th:if="${param.error} and ${session}">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <span th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}"></span>
+            </div>
+            <form action="/login" method="post">
+                <div class="form-group has-feedback">
+                    <input type="text" class="form-control" id="username" name="username" placeholder="ID">
+                    <span class="glyphicon glyphicon-user form-control-feedback" width="10px" ></span>
+                </div>
+                <!-- /.form-group -->
+                <div class="form-group has-feedback">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                </div>
+                <!-- /.form-group -->
+                <div class="row">
+                    <div class="col-md-offset-8 col-md-4">
+                        <button type="submit" class="btn btn-primary btn-block btn-flat"><i class="fa fa-sign-in"></i> 로그인</button>
+                    </div>
+                    <!-- /.col-md-offset-8 .col-md-4 -->
+                </div>
+                <!-- /.row -->
+            </form>
+        </div>
+        <!-- /.login-box-body -->
+    </div>
+    <!-- /.login-box -->
+</div>
+</div>
+<!-- content-js -->
+<th:block layout:fragment="content-script">
+
+</th:block>
+<!-- /content-js -->
+</body>
+</html>
